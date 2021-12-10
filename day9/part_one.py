@@ -1,5 +1,4 @@
 import math
-import itertools
 
 # generate raw heatmap
 input = open("day9/input.txt", "r").readlines()
