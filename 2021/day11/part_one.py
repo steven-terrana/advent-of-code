@@ -1,5 +1,4 @@
 import itertools
-from termcolor import colored
 
 input = [ line.strip() for line in open("2021/day11/input.txt", "r").readlines() ]
 
