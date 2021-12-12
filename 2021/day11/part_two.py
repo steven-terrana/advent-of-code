@@ -49,9 +49,13 @@ for x, line in enumerate(input):
     grid[-1].append(int(value))
 
 # step
-count = 0
-for step in range(100):
+step = 0
+while True:
+  step += 1
   increment(grid)
-  count += flash(grid)
+  c = flash(grid)
+  if c == 100: 
+    print(step)
+    break
 
-print(count)
+# print(count)
