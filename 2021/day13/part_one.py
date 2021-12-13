@@ -1,14 +1,4 @@
-from termcolor import colored
-input = [ x.strip() for x in open("2021/day13/input.txt").readlines() ]
-
-# print paper
-def print_paper(paper):
-  for row in paper:
-    for value in row:
-      if value == 1: 
-        print(colored('1', 'red', attrs=["bold"]), end=' ')
-      else: print('0', end=' ')
-    print('')
+input = [ x.strip() for x in open("2021/day13/test.txt").readlines() ]
 
 # parse the input
 def parse_input(input):
@@ -40,7 +30,6 @@ def initialize_paper(dots):
 
 def fold(_paper, fold):
   if fold[0] == "y":
-    # _paper[fold[1]] = [ "-" for x in _paper[fold[1]] ]
     paper = _paper[:fold[1]]
     h2 = _paper[fold[1]+1:]
     for i, row in enumerate(h2):
@@ -48,23 +37,16 @@ def fold(_paper, fold):
         if value == 1:
           paper[-1 - i][j] = 1
   if fold[0] == "x":
-    # for row in _paper: row[fold[1]] = "|"
     paper = [ row[:fold[1] ] for row in _paper ]
     h2 = [ row[fold[1]+1:] for row in _paper ] 
     for i, row in enumerate(h2):
       for j, value in enumerate(row):
         if value == 1:
           paper[i][-1 - j] = 1
-
-  # print('paper: ')
-  # print_paper(paper)
   return paper
 
 
 (dots, folds) = parse_input(input)
 paper = initialize_paper(dots)
-
-for f in folds: paper = fold(paper, f)
-
-print_paper(paper)
+fold(paper, folds[0])
 print(sum([ sum(row) for row in paper ]))
