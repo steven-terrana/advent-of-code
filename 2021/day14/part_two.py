@@ -19,10 +19,20 @@ def parse_input(input):
   return polymer
 
 def step(polymer):
+  # biggest take away is that we don't actually
+  # need to know the sequence of the letters in
+  # the polymer chain. All that matters is the 
+  # number of occurences of each letter.
+  # we can do that by tracking the number of occurences
+  # of each discrete pair. 
+
   # create the next polymer iteration
   # and reset the counters
   p = copy.deepcopy(polymer)
   for pair in p: p[pair]["count"] = 0
+
+  # each pair splits into a defined 
+  # set of two new pairs. 
   for pair in polymer:
     n = polymer[pair]["count"]
     left = f'{pair[0]}{polymer[pair]["insertion"]}'
