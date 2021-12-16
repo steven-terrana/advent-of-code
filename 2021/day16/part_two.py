@@ -1,17 +1,49 @@
 import numpy as np
 
-
 class Packet:
   def __init__(self, version, id):
     self.version = version
     self.id = id
     self.sub_packets = []
+    self.value = None
   
   def add_sub_packet(self, p):
     self.sub_packets.append(p)
 
   def get_sub_packets(self):
     return self.sub_packets
+
+  def set_value(self, v):
+    self.value = v
+
+  def get_value(self):
+    sub_packet_values = [ packet.get_value() for packet in self.get_sub_packets() ]
+    if self.id == 0: # sum packets
+      return sum(sub_packet_values)
+    if self.id == 1: # product packets
+      return np.product(sub_packet_values)
+    if self.id == 2: # minimum packets
+      return min(sub_packet_values)
+    if self.id == 3: # maximum packets
+      return max(sub_packet_values)
+    if self.id == 4: # literal packets
+      # value set during parsing
+      return self.value
+    if self.id == 5: # greater than packets
+      return 1 if sub_packet_values[0] > sub_packet_values[1] else 0
+    if self.id == 6: # less than packets
+      return 1 if sub_packet_values[0] < sub_packet_values[1] else 0
+    if self.id == 7: # equal to packets
+      return 1 if sub_packet_values[0] == sub_packet_values[1] else 0
+
+  def get_version(self):
+    return sum([ self.version ].extend([ packet.get_version() for packet in self.get_sub_packets() ]))
+
+  def print(self):
+    print('packet info:')
+    print(f'  version: {self.version}')
+    print(f'  id: {self.id}')
+    print(f'  num sub packets: {len(self.sub_packets)}')
 
 def hex_to_binary(hex):
   return list(bin(int(hex, 16))[2:].zfill(4*len(hex)))
@@ -37,17 +69,15 @@ def parse_packet_header(binary):
   del binary[0:6]
   return (binary, version, id)
 
-def parse_packet(binary, versions=None, p_idx=None):
-  if versions is None: versions = []
-  if p_idx is None: p_idx = 0
-
-  p_idx += 1
-  print(f'parsing packet #{p_idx}')
-
+def parse_packet(binary):
   (binary, version, id) = parse_packet_header(binary)
-  versions.append(version)
+
+  current_packet = Packet(version, id)
+
   if id == 4: # calculate literal value
     (binary, n) = calculate_literal(binary)
+    current_packet.set_value(n)
+    return (binary, current_packet)
   else: 
     length_type_id = int(binary[0])
     del binary[0]
@@ -56,17 +86,18 @@ def parse_packet(binary, versions=None, p_idx=None):
       del binary[0:15]
       length_0 = len(binary)
       while length_0 - len(binary) < total_length_in_bits:
-        (binary, versions) = parse_packet(binary, versions, p_idx)
+        (binary, packet) = parse_packet(binary)
+        current_packet.add_sub_packet(packet)
     elif length_type_id == 1:
       n_sub_packets = int(''.join(binary[0:11]),2)
       del binary[0:11]
       for p in range(n_sub_packets): 
-        (binary, versions) = parse_packet(binary, versions, p_idx)
+        (binary, packet) = parse_packet(binary)
+        current_packet.add_sub_packet(packet)
 
-  return (binary, versions)
+  return (binary, current_packet)
 
 hex = open("2021/day16/input.txt","r").read().strip()
 binary = hex_to_binary(hex)
-(binary, versions) = parse_packet(binary)
-print(versions)
-print(sum(versions))
+(binary, packet) = parse_packet(binary)
+print(packet.get_value())
