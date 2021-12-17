@@ -36,15 +36,6 @@ class Packet:
     if self.id == 7: # equal to packets
       return 1 if sub_packet_values[0] == sub_packet_values[1] else 0
 
-  def get_version(self):
-    return sum([ self.version ].extend([ packet.get_version() for packet in self.get_sub_packets() ]))
-
-  def print(self):
-    print('packet info:')
-    print(f'  version: {self.version}')
-    print(f'  id: {self.id}')
-    print(f'  num sub packets: {len(self.sub_packets)}')
-
 def hex_to_binary(hex):
   return list(bin(int(hex, 16))[2:].zfill(4*len(hex)))
 
