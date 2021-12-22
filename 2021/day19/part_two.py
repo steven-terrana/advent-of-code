@@ -162,29 +162,6 @@ while unlinked_scanners:
   unlinked_scanners -= linked_this_round
   linked_last_round = linked_this_round
 
-# now that we've populated the graph and can map all coordinate systems
-# to that of scanner 0's frame of reference, we can use the shortest
-# path from a given scanner to scanner 0 in the graph to determine the
-# transformations that need to occur. For each scanner then, perform
-# the required series of transformations to map the coordinates of the
-# beacons to scanner 0's coordinate system and add these beacons to a
-# global view of all the beacons.
-global_coordinates = frame_of_reference.beacons
-for scanner in scanners[1:]:
-  if nx.has_path(mesh, scanner, frame_of_reference):
-    path = nx.shortest_path(mesh, scanner, frame_of_reference)
-    print(f'path from {frame_of_reference.id} to {scanner.id}: {[ scanner.id for scanner in path ]}')
-    beacons = copy.deepcopy(scanner.beacons)
-    transformations = []
-    for idx in range(len(path[:-1])):
-      edge = mesh.get_edge_data(path[idx], path[idx+1])
-      t = edge["transform"]
-      beacons = t.perform(beacons)
-    global_coordinates = global_coordinates.union(beacons)
-  else:
-    print(f'no path from {root.id} to {scanner.id}')
-
-
 # for each possible pair of scanners, translate both scanners to
 # the scanner 0 frame of reference and compute their manhattan distance
 # keeping track of the largest distance found.
