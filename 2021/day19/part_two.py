@@ -130,61 +130,94 @@ class Transform:
     return set([ tuple(beacon) for beacon in rotated ])
 
 
-scanners = parse_input()
-
-# create a directed graph where the nodes are the 
-# scanners and the edges represent pairs with sufficient
-# overlap in beacons. The edge direction follows the direction
-# of the transformation. So translating coordinates from scanner 1
-# to scanner 0 would mean an edge from scanner 1 to scanner 0 with an 
-# edge attribute of "transform"
-
-mesh = nx.DiGraph()
-mesh.add_nodes_from(scanners)
-
-# populate the edges by finding the least number of pairs needed
-# to translate to scanner 0's frame of reference.
-frame_of_reference = scanners[0]
-linked_last_round = set([frame_of_reference]) 
-unlinked_scanners = set(scanners[1:])
-while unlinked_scanners:
-  print(f'trying to find links for: {[s.id for s in unlinked_scanners]}')
-  if not linked_last_round: break
-  linked_this_round = set()
-  for root in linked_last_round:
-    for scanner in unlinked_scanners:
-      print(f'checking for link from {root.id} to {scanner.id}')
-      t = Transform.find(root, scanner)
-      if t:
-        print(f'---> found a link!')
-        mesh.add_edge(scanner, root, transform=t)
-        linked_this_round.add(scanner)
-  unlinked_scanners -= linked_this_round
-  linked_last_round = linked_this_round
-
-# for each possible pair of scanners, translate both scanners to
-# the scanner 0 frame of reference and compute their manhattan distance
-# keeping track of the largest distance found.
-greatest_distance = -math.inf
-origin = set([(0,0,0)])
-for pair in itertools.combinations(scanners, 2):
-  points = []
-  for scanner in pair:
+def part_one(scanners, mesh):
+  '''
+  now that we've populated the graph and can map all coordinate systems
+  to that of scanner 0's frame of reference, we can use the shortest
+  path from a given scanner to scanner 0 in the graph to determine the
+  transformations that need to occur. For each scanner then, perform
+  the required series of transformations to map the coordinates of the
+  beacons to scanner 0's coordinate system and add these beacons to a
+  global view of all the beacons.
+  '''
+  frame_of_reference = scanners[0]
+  global_coordinates = frame_of_reference.beacons
+  for scanner in scanners[1:]:
     if nx.has_path(mesh, scanner, frame_of_reference):
       path = nx.shortest_path(mesh, scanner, frame_of_reference)
       print(f'path from {frame_of_reference.id} to {scanner.id}: {[ scanner.id for scanner in path ]}')
-      beacons = origin
+      beacons = copy.deepcopy(scanner.beacons)
+      transformations = []
       for idx in range(len(path[:-1])):
         edge = mesh.get_edge_data(path[idx], path[idx+1])
         t = edge["transform"]
         beacons = t.perform(beacons)
-      points.append(list(beacons)[0])
+      global_coordinates = global_coordinates.union(beacons)
     else:
       print(f'no path from {root.id} to {scanner.id}')
+  print(f'number of beacons: {len(global_coordinates)}')
+
+def part_two(scanners, mesh):
+  '''
+  for each possible pair of scanners, translate both scanners to
+  the scanner 0 frame of reference and compute their manhattan distance
+  keeping track of the largest distance found.
+  '''
+  frame_of_reference = scanners[0]
+  greatest_distance = -math.inf
+  origin = set([(0,0,0)])
+  for pair in itertools.combinations(scanners, 2):
+    points = []
+    for scanner in pair:
+      if nx.has_path(mesh, scanner, frame_of_reference):
+        path = nx.shortest_path(mesh, scanner, frame_of_reference)
+        print(f'path from {frame_of_reference.id} to {scanner.id}: {[ scanner.id for scanner in path ]}')
+        beacons = origin
+        for idx in range(len(path[:-1])):
+          edge = mesh.get_edge_data(path[idx], path[idx+1])
+          t = edge["transform"]
+          beacons = t.perform(beacons)
+        points.append(list(beacons)[0])
+      else:
+        print(f'no path from {root.id} to {scanner.id}')
+    distance = sum([ abs(points[0][idx] - points[1][idx]) for idx in range(len(points[0]))])
+    if distance > greatest_distance:
+      greatest_distance = distance
+  print(f'greatest distance: {greatest_distance}')
+
+def create_transformation_graph(scanners):
+  '''
+  create a directed graph where the nodes are the 
+  scanners and the edges represent pairs with sufficient
+  overlap in beacons. The edge direction follows the direction
+  of the transformation. So translating coordinates from scanner 1
+  to scanner 0 would mean an edge from scanner 1 to scanner 0 with an 
+  edge attribute of "transform"
+  '''
+  mesh = nx.DiGraph()
+  mesh.add_nodes_from(scanners)
+
+  # populate the edges by finding the least number of pairs needed
+  # to translate to scanner 0's frame of reference.
+  frame_of_reference = scanners[0]
+  linked_last_round = set([frame_of_reference]) 
+  unlinked_scanners = set(scanners[1:])
+  while unlinked_scanners:
+    print(f'trying to find links for: {[s.id for s in unlinked_scanners]}')
+    if not linked_last_round: break
+    linked_this_round = set()
+    for root in linked_last_round:
+      for scanner in unlinked_scanners:
+        print(f'checking for link from {root.id} to {scanner.id}')
+        t = Transform.find(root, scanner)
+        if t:
+          print(f'---> found a link!')
+          mesh.add_edge(scanner, root, transform=t)
+          linked_this_round.add(scanner)
+    unlinked_scanners -= linked_this_round
+    linked_last_round = linked_this_round
   
-  distance = sum([ abs(points[0][idx] - points[1][idx]) for idx in range(len(points[0]))])
-  if distance > greatest_distance:
-    greatest_distance = distance
-
-
-print(f'greatest distance: {greatest_distance}')
+scanners = parse_input()
+mesh = create_transformation_graph(scanners)
+part_one(scanners, mesh)
+part_two(scanners, mesh)
