@@ -145,16 +145,14 @@ def part_one(scanners, mesh):
   for scanner in scanners[1:]:
     if nx.has_path(mesh, scanner, frame_of_reference):
       path = nx.shortest_path(mesh, scanner, frame_of_reference)
-      print(f'path from {frame_of_reference.id} to {scanner.id}: {[ scanner.id for scanner in path ]}')
       beacons = copy.deepcopy(scanner.beacons)
-      transformations = []
       for idx in range(len(path[:-1])):
         edge = mesh.get_edge_data(path[idx], path[idx+1])
         t = edge["transform"]
         beacons = t.perform(beacons)
       global_coordinates = global_coordinates.union(beacons)
     else:
-      print(f'no path from {root.id} to {scanner.id}')
+      print(f'no path from {frame_of_reference.id} to {scanner.id}')
   print(f'number of beacons: {len(global_coordinates)}')
 
 def part_two(scanners, mesh):
@@ -171,7 +169,6 @@ def part_two(scanners, mesh):
     for scanner in pair:
       if nx.has_path(mesh, scanner, frame_of_reference):
         path = nx.shortest_path(mesh, scanner, frame_of_reference)
-        print(f'path from {frame_of_reference.id} to {scanner.id}: {[ scanner.id for scanner in path ]}')
         beacons = origin
         for idx in range(len(path[:-1])):
           edge = mesh.get_edge_data(path[idx], path[idx+1])
@@ -179,7 +176,7 @@ def part_two(scanners, mesh):
           beacons = t.perform(beacons)
         points.append(list(beacons)[0])
       else:
-        print(f'no path from {root.id} to {scanner.id}')
+        print(f'no path from {frame_of_reference.id} to {scanner.id}')
     distance = sum([ abs(points[0][idx] - points[1][idx]) for idx in range(len(points[0]))])
     if distance > greatest_distance:
       greatest_distance = distance
@@ -208,14 +205,15 @@ def create_transformation_graph(scanners):
     linked_this_round = set()
     for root in linked_last_round:
       for scanner in unlinked_scanners:
-        print(f'checking for link from {root.id} to {scanner.id}')
+        print(f'  checking for link from {root.id} to {scanner.id}')
         t = Transform.find(root, scanner)
         if t:
-          print(f'---> found a link!')
+          print(f'  ---> found a link!')
           mesh.add_edge(scanner, root, transform=t)
           linked_this_round.add(scanner)
     unlinked_scanners -= linked_this_round
     linked_last_round = linked_this_round
+  return mesh 
   
 scanners = parse_input()
 mesh = create_transformation_graph(scanners)
