@@ -1,5 +1,5 @@
 
-input = open("2020/day2/input.txt", "r").readlines()
+input = open("2020/day2/input.txt", "r").adlines()
 
 valid = 0
 for line in input:
