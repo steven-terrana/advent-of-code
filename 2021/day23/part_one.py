@@ -49,13 +49,12 @@ class Amphipod:
   def __hash__(self):
     return hash(tuple([self.type, tuple(self.position)]))
   
+  def get_energy(self):
+    return self.energy[self.type]
+
   def get_possible_moves(self, board):
     '''
-    returns all possible moves for this Amphipod where
-    a move is a 2D array. First element is the energy
-    required to move to the new position, second element
-    is the new board after the move.
-    Empty list if no moves possible.
+    returns all possible positions this Amphipod can move to
     '''
     moves = []
     location = self.position[0]
@@ -126,30 +125,20 @@ class Amphipod:
     # if we're in the hallway, we're going to either move to 
     # the first room slot or the second room slot.
     if location == "hallway":
-      if self.position[1] <= left:
-        h_to_r = left - self.position[1] + 1 + dest_room
-      else: 
-        h_to_r = self.position[1] - right + (len(board.rooms) - dest_room)
       # check if first and second slots are empty
       # and move to second slot if possible
       if all([
         board.rooms[dest_room][0] == None,
         board.rooms[dest_room][1] == None
       ]): 
-        energy_required = (h_to_r + 2) * self.energy[self.type]
-        new_board = board.move(self, ["rooms", dest_room, 1])
-        moves.append([energy_required, new_board])
+        moves.append(["rooms", dest_room, 1])
       # check if second slot is occupied, if so
       # then move to first slot (we already checked
       # if this was a valid move) 
       if board.rooms[dest_room][1]:
-        energy_required = (h_to_r + 1) * self.energy[self.type]
-        new_board = board.move(self, ["rooms", dest_room, 0])
-        moves.append([energy_required, new_board])
+        moves.append(["rooms", dest_room, 0])
     
     if location == "rooms":
-      distance_to_leave_room = 1 if self.position[2] == 0 else 2
-
       # move into target room
       # in fact, if this is possible, don't consider
       # other moves. always move to the destination room.
@@ -157,29 +146,7 @@ class Amphipod:
       rs2 = board.rooms[dest_room][1]
       # room is empty:
       if [ rs1, rs2 ] == [ None, None ]:
-        current_room = self.position[1]
-        # current to the left of the dest room
-        if current_room < dest_room:
-          total_distance = (
-            distance_to_leave_room
-            + self.room_to_hallway[dest_room]["left"] 
-            - self.room_to_hallway[current_room]["right"] 
-            + 1
-            + (dest_room - current_room)
-            + 2
-          )
-        if current_room > dest_room:
-          total_distance = (
-            distance_to_leave_room
-            + self.room_to_hallway[current_room]["left"] 
-            - self.room_to_hallway[dest_room]["right"] 
-            + 1
-            + (current_room - dest_room)
-            + 2
-          )
-        energy_required = total_distance * self.energy[self.type]
-        new_board = board.move(self, ['rooms', dest_room, 1])
-        moves.append([energy_required, new_board])
+        moves.append(['rooms', dest_room, 1])
         return moves
 
       # room slot 2 filled with correct type 
@@ -189,64 +156,31 @@ class Amphipod:
           rs2.type == self.type,
           rs1 is None
         ]):
-          current_room = self.position[1]
-          # current to the left of the dest room
-          if current_room < dest_room:
-            total_distance = (
-              distance_to_leave_room
-              + self.room_to_hallway[dest_room]["left"] 
-              - self.room_to_hallway[current_room]["right"] 
-              + 1
-              + (dest_room - current_room)
-              + 1
-            )
-          if current_room > dest_room:
-            total_distance = (
-              distance_to_leave_room
-              + self.room_to_hallway[current_room]["left"] 
-              - self.room_to_hallway[dest_room]["right"] 
-              + 1
-              + (current_room - dest_room)
-              + 1
-            )
-          energy_required = total_distance * self.energy[self.type]
-          new_board = board.move(self, ['rooms', dest_room, 0])
-          moves.append([energy_required, new_board])
+          moves.append(['rooms', dest_room, 0])
           return moves
 
       # move left
       left = self.room_to_hallway[self.position[1]]["left"]
       pos = left
-      rooms_passed = 0
       while board.hallway[pos] == None:
-        if pos in [4, 3, 2, 1]: rooms_passed += 1
-        total_distance = distance_to_leave_room + (left - pos) + rooms_passed
-        total_energy = total_distance * self.energy[self.type]
-        new_board = board.move(self, ['hallway', pos])
-        moves.append([total_energy, new_board])
+        moves.append(['hallway', pos])
         pos -= 1
         if pos < 0: break
 
       # move right
       right = self.room_to_hallway[self.position[1]]["right"]
       pos = right
-      rooms_passed = 0
       while board.hallway[pos] == None:
-        if pos in [2, 3, 4, 5]: rooms_passed += 1
-        total_distance = distance_to_leave_room + (pos - right) + rooms_passed
-        total_energy = total_distance * self.energy[self.type]
-        new_board = board.move(self, ['hallway', pos])
-        moves.append([total_energy, new_board])
+        moves.append(['hallway', pos])
         pos += 1
         if pos > len(board.hallway) - 1: break
     
-    return moves
+    return [ list(m) for m in set([ tuple(m) for m in moves ]) ]
           
 class Board:
   def __init__(self, rooms, hallway):
     self.hallway = hallway
     self.rooms = rooms
-    return
   
   def __eq__(self, other):
     if not isinstance(other, Board):
@@ -274,19 +208,25 @@ class Board:
     ])
 
   def get_possible_moves(self):
+    '''returns a list of 2-element arrays
+    first element is Amphipod to move
+    second element is new position for the Amphipod
+    '''
     amphipods = []
     # collect hallway amphipods
     [ amphipods.append(a) for a in self.hallway if a ]
     # collect room amphipods
     [ amphipods.append(s) for r in self.rooms for s in r if s ]
-    moves = []
-    for a in amphipods: moves.extend(a.get_possible_moves(self))
-    return moves
+    all_moves = []
+    for a in amphipods: 
+      moves = a.get_possible_moves(self)
+      for m in moves:
+        all_moves.append([a, m])
+    return all_moves
 
   def move(self, amphipod, position):
     '''
-    returns a new board after moving the provided
-    amphipod to the provided position
+    returns a new board after moving the provided amphipod to the provided position
     '''
     # create deep copies of the board and amphipod
     # so we dont mess with other threads
@@ -313,27 +253,7 @@ class Board:
       room = position[1]
       slot = position[2]
       _board.rooms[room][slot] = _amphipod
-
-    a = []
-    for x in _board.hallway: 
-      if x: a.append(x)
-
-    for r in _board.rooms:
-      for s in r:
-        if s: a.append(s)
     
-    if (len(a)) > 8: 
-      print("uh oh..")
-      print(f"amphipod: {amphipod.type} - {amphipod.position}")
-      print(f"new position: {position}")
-      print("=================")
-      print("previous: ")
-      self.print()
-      print("new: ")
-      _board.print()
-      print(f"new amphipod: {_amphipod.type} - {_amphipod.position}")
-      quit()
-
     return _board
 
   def print(self):
@@ -345,6 +265,25 @@ class Board:
     print(f'###{r0[0]}#{r0[1]}#{r0[2]}#{r0[3]}###')
     print(f'  #{r1[0]}#{r1[1]}#{r1[2]}#{r1[3]}#  ')
     print( '  #########')
+
+  @staticmethod
+  def calculate_distance(p1, p2):
+    # distance leaving origin room (a) 
+    # and entering destination room (b)
+    leaving, entering = 0, 0
+    if p1[0] == "rooms":
+      leaving = 1 if p1[2] == 0 else 2
+    if p2[0] == "rooms":
+      entering = 1 if p2[2] == 0 else 2
+
+    # hallway distance
+    hallway_converter = [ 0, 1, 3, 5, 7, 9, 10 ]
+    room_converter = [ 2, 4, 6, 8 ]
+    p1_pos = hallway_converter[p1[1]] if p1[0] == "hallway" else room_converter[p1[1]]
+    p2_pos = hallway_converter[p2[1]] if p2[0] == "hallway" else room_converter[p2[1]]
+    
+    distance = leaving + abs(p2_pos - p1_pos) + entering
+    return distance
 
   @staticmethod
   def from_input(path):
@@ -377,24 +316,119 @@ def play_game(total_energy, board, memo={}):
 
   energies = []
   for move in moves:
-    (energy_required, new_board) = move
-    new_total_energy = total_energy + energy_required
+    (amphipod, position) = move
+    new_board = board.move(amphipod, position)
+    distance = Board.calculate_distance(amphipod.position, position)
+    new_total_energy = total_energy + distance * amphipod.get_energy()
     move_energy = play_game(new_total_energy, new_board, memo)
     if move_energy: energies.append(move_energy)
 
   memo[board] = min(energies) if energies else None 
   return memo[board]
-
 board = Board.from_input("input.txt")
-board.print()
+minimum_energy = play_game(0, board)
+print(minimum_energy)
 
+# total = 0 
+# print("---")
+# amphipod = board.rooms[2][0]
+# position = ["hallway", 2]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
+# print("---")
+# amphipod = board.rooms[1][0]
+# position = ["rooms", 2, 0]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
+# print("---")
+# amphipod = board.rooms[1][1]
+# position = ["hallway", 3]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
+# print("---")
+# amphipod = board.hallway[2]
+# position = ["rooms", 1, 1]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
+# print("---")
+# amphipod = board.rooms[0][0]
+# position = ["rooms", 1, 0]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
+# print("---")
+# amphipod = board.rooms[3][0]
+# position = ["hallway", 4]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
+# print("---")
+# amphipod = board.rooms[3][1]
+# position = ["hallway", 5]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
-# minimum_energy = play_game(0, board)
-# print(minimum_energy)
+# print("---")
+# amphipod = board.hallway[4]
+# position = ["rooms", 3, 1]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
 
+# print("---")
+# amphipod = board.hallway[3]
+# position = ["rooms", 3, 0]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
+
+# print("---")
+# amphipod = board.hallway[5]
+# position = ["rooms", 0, 0]
+# board = board.move(amphipod, position)
+# steps = Board.calculate_distance(amphipod.position, position)
+# energy = steps * amphipod.get_energy()
+# total += energy
+# print(f'{amphipod.type} moved {steps} steps and used {energy} energy')
+# board.print()
+
+# print("---")
+# print(total)
