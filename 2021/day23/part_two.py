@@ -2,6 +2,10 @@ import re
 import copy
 from termcolor import colored
 import math
+import sys
+
+# woof. 
+sys.setrecursionlimit(2000)
 
 class Amphipod:
   '''
@@ -68,27 +72,22 @@ class Amphipod:
     if location == "rooms":
       (room_number, room_slot) = self.position[1:3]
 
-      # in room but room is finished!
-      neighbor = board.rooms[room_number][int(not room_slot)]
-      if neighbor:
-        if all([
-          room_number == dest_room, # in destination room
-          neighbor is not None, # have a neighbor
-          neighbor.type == self.type # neighbor is same type
-        ]): return []
-
-      # in room slot 2 of the destination room, no reason to move
-      if all([
-        room_number == dest_room,
-        room_slot == 1
-      ]): return []
+      # in destination room and on top of amphipods
+      # of the same type
+      if room_number == dest_room:
+        idxs = [ idx for idx in [1,2,3] if idx > self.position[2] ]
+        if [ board.rooms[room_number][i].type for i in idxs ] == [ self.type ] * len(idxs):
+          return []
 
       # room's not finished but in room slot 2 
       # and blocked by an amphipod in room slot 1
-      if all([
-        room_slot == 1, # in room slot 2
-        board.rooms[room_number][0] is not None # have a neighbor
-      ]): return []
+      blocked_exit = False
+      pos = self.position[2] - 1
+      while pos >= 0:
+        if board.rooms[room_number][pos]:
+          blocked_exit = True
+        pos -= 1
+      if blocked_exit: return []
 
     if location == "hallway":
       hallway_slot = self.position[1]
@@ -100,10 +99,9 @@ class Amphipod:
       if board.rooms[dest_room][0]:
         return []
       
-      # first room slot is free but the second 
-      # slot has an amphipod of the wrong type
-      if board.rooms[dest_room][1]:
-        if board.rooms[dest_room][1].type != self.type:
+      # destination room has an amphipod of the wrong type
+      r = [ a.type for a in board.rooms[dest_room] if a ]
+      if not r.count(self.type) == len(r):
           return []
 
       # coming from the left of the room and blocked
@@ -122,21 +120,14 @@ class Amphipod:
     #   1. in the hallway and can reach the destination room
     #   2. in a room
     
-    # if we're in the hallway, we're going to either move to 
-    # the first room slot or the second room slot.
+    # if we're in the hallway, move to the lowest spot available
     if location == "hallway":
-      # check if first and second slots are empty
-      # and move to second slot if possible
-      if all([
-        board.rooms[dest_room][0] == None,
-        board.rooms[dest_room][1] == None
-      ]): 
-        moves.append(["rooms", dest_room, 1])
-      # check if second slot is occupied, if so
-      # then move to first slot (we already checked
-      # if this was a valid move) 
-      if board.rooms[dest_room][1]:
-        moves.append(["rooms", dest_room, 0])
+      idx = None
+      for i, slot_taken in enumerate(board.rooms[dest_room]):
+        if slot_taken: break
+        idx = i
+      if idx is not None:
+        moves.append(["rooms", dest_room, idx])
     
     if location == "rooms":
       # move into target room if hallway is clear
@@ -159,21 +150,17 @@ class Amphipod:
           break
 
       if hallway_clear:
-        rs1 = board.rooms[dest_room][0]
-        rs2 = board.rooms[dest_room][1]
-        # room is empty:
-        if [ rs1, rs2 ] == [ None, None ]:
-          moves.append(['rooms', dest_room, 1])
-          return moves
-
-        # room slot 2 filled with correct type 
-        # and room slot 1 is empty
-        if rs2:
-          if all([
-            rs2.type == self.type,
-            rs1 is None
-          ]):
-            moves.append(['rooms', dest_room, 0])
+        # make sure all amphipods in dest room
+        # are of the right type
+        r = [ a.type for a in board.rooms[dest_room] if a ]
+        if r.count(self.type) == len(r):
+          # move to the lowest room available
+          idx = None
+          for i, slot_taken in enumerate(board.rooms[dest_room]):
+            if slot_taken: break
+            idx = i
+          if idx is not None:
+            moves.append(["rooms", dest_room, idx])
             return moves
 
       # move left
@@ -195,6 +182,7 @@ class Amphipod:
     return [ list(m) for m in set([ tuple(m) for m in moves ]) ]
           
 class Board:
+  '''the game board'''
   def __init__(self, rooms, hallway):
     self.hallway = hallway
     self.rooms = rooms
@@ -218,10 +206,10 @@ class Board:
     '''over when all Amphipods are in the right room'''
     if True in [ None in room for room in self.rooms ]: return False
     return all([
-      [ a.type for a in self.rooms[0] ] == ['A', 'A'],
-      [ a.type for a in self.rooms[1] ] == ['B', 'B'],
-      [ a.type for a in self.rooms[2] ] == ['C', 'C'],
-      [ a.type for a in self.rooms[3] ] == ['D', 'D'],
+      [ a.type for a in self.rooms[0] ] == ['A', 'A', 'A', 'A'],
+      [ a.type for a in self.rooms[1] ] == ['B', 'B', 'B', 'B'],
+      [ a.type for a in self.rooms[2] ] == ['C', 'C', 'C', 'C'],
+      [ a.type for a in self.rooms[3] ] == ['D', 'D', 'D', 'D'],
     ])
 
   def get_possible_moves(self):
@@ -277,21 +265,26 @@ class Board:
     h =  [ colored(a.type, 'red')    if a else '.' for a in self.hallway ]
     r0 = [ colored(r[0].type, 'red') if r[0] else '.' for r in self.rooms ]
     r1 = [ colored(r[1].type, 'red') if r[1] else '.' for r in self.rooms ]
+    r2 = [ colored(r[2].type, 'red') if r[2] else '.' for r in self.rooms ]
+    r3 = [ colored(r[3].type, 'red') if r[3] else '.' for r in self.rooms ]
     print("#############")
     print(f'#{h[0]}{h[1]}.{h[2]}.{h[3]}.{h[4]}.{h[5]}{h[6]}#')
     print(f'###{r0[0]}#{r0[1]}#{r0[2]}#{r0[3]}###')
     print(f'  #{r1[0]}#{r1[1]}#{r1[2]}#{r1[3]}#  ')
+    print(f'  #{r2[0]}#{r2[1]}#{r2[2]}#{r2[3]}#  ')
+    print(f'  #{r3[0]}#{r3[1]}#{r3[2]}#{r3[3]}#  ')
     print( '  #########')
 
   @staticmethod
   def calculate_distance(p1, p2):
+    '''calculate the number of steps required to move from p1 to p2'''
     # distance leaving origin room (a) 
     # and entering destination room (b)
     leaving, entering = 0, 0
     if p1[0] == "rooms":
-      leaving = 1 if p1[2] == 0 else 2
+      leaving = p1[2] + 1
     if p2[0] == "rooms":
-      entering = 1 if p2[2] == 0 else 2
+      entering = p2[2] + 1
 
     # hallway distance
     hallway_converter = [ 0, 1, 3, 5, 7, 9, 10 ]
@@ -304,6 +297,7 @@ class Board:
 
   @staticmethod
   def from_input(path):
+    '''create a board from the input'''
     lines = [ line.strip() for line in open(f"2021/day23/{path}", "r").readlines() ]
     rooms = [ [], [], [], [] ]
     hallway = []
@@ -314,7 +308,7 @@ class Board:
       else: 
         a = Amphipod(c, ["hallway", len(hallway)])
         hallway.append(a)
-    for line in lines[2:4]:
+    for line in lines[2:6]:
       letters = re.findall(r'[A-D\.]', line)
       for r, l in enumerate(letters):
         if l != ".":
@@ -324,6 +318,10 @@ class Board:
           rooms[r].append(None)
     return Board(rooms, hallway)
 
+# on top of memoization to speed things up.. 
+# we know that if the total energy for a game
+# exceeds the minimal energy recorded to win so
+# far, then we can just stop trying for that game.
 globals()["minimal_total_energy"] = math.inf
 
 def play_game(total_energy, board, game_moves=[], memo={}):
@@ -357,7 +355,7 @@ def play_game(total_energy, board, game_moves=[], memo={}):
   memo[key] = min(energies) if energies else None 
   return memo[key]
 
-
-board = Board.from_input("input.txt")
+board = Board.from_input("input2.txt")
+board.print()
 minimum_energy = play_game(0, board)
 print(minimum_energy)
