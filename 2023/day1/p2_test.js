@@ -19,12 +19,3 @@ test('test conversion of inputs to number', async(t) => {
     })
   };
 })
-
-
-// test ('summing inputs yields the right value', (t) => {
-//   sum = 0
-//   Object.keys(data).map( (input) => {
-//     sum += p2.getCalibrationValue(input)
-//   });
-//   assert(sum, 281)
-// })
