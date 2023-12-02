@@ -10,10 +10,7 @@ function fewestCubes(game, color){
 
 // calculates the power for a given game
 function calculatePower(game){
-  red = fewestCubes(game, 'red')
-  blue = fewestCubes(game, 'blue')
-  green = fewestCubes(game, 'green')
-  return red * green * blue
+  return ['red', 'green', 'blue'].reduce( (p, color) => p *= fewestCubes(game, color), 1)
 }
 
 function sumPower(games){
