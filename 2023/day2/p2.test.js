@@ -5,44 +5,44 @@ const p2 = require('./p2.js')
 // the game
 data = [
   {
-    "game": "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
-    "id": 1,
-    "red": 4, 
-    "green": 2, 
-    "blue": 6, 
-    "power": 48
+    game: "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
+    id: 1,
+    red: 4, 
+    green: 2, 
+    blue: 6, 
+    power: 48
   },
   {
-    "game": "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
-    "id": 2,
-    "red": 1, 
-    "green": 3, 
-    "blue": 4, 
-    "power": 12
+    game: "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue",
+    id: 2,
+    red: 1, 
+    green: 3, 
+    blue: 4, 
+    power: 12
   },
   {
-    "game": "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
-    "id": 3,
-    "red": 20, 
-    "green": 13, 
-    "blue": 6, 
-    "power": 1560
+    game: "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red",
+    id: 3,
+    red: 20, 
+    green: 13, 
+    blue: 6, 
+    power: 1560
   },
   {
-    "game": "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
-    "id": 4,
-    "red": 14, 
-    "green": 3, 
-    "blue": 15, 
-    "power": 630
+    game: "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red",
+    id: 4,
+    red: 14, 
+    green: 3, 
+    blue: 15, 
+    power: 630
   },
   {
-    "game": "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
-    "id": 5,
-    "red": 6, 
-    "green": 3, 
-    "blue": 2, 
-    "power": 36
+    game: "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green",
+    id: 5,
+    red: 6, 
+    green: 3, 
+    blue: 2, 
+    power: 36
   }
 ]
 
