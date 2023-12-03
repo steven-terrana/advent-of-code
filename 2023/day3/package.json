@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "exports": "./p1.js",
+  "exports": "./hitbox.js",
   "scripts": {
-    "test": "jest --verbose"
+    "test": "jest --verbose",
+    "debug": "node --inspect p2.js"
   },
   "author": "",
   "license": "ISC",
