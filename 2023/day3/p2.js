@@ -25,8 +25,8 @@ import chalk from 'chalk'
 // there are going to be two types of Things... numbers and symbols
 // we are going to use this to filter Things later.
 const Types = Object.freeze({
-	number: Symbol("number"),
-	symbol: Symbol("symbol")
+  number: Symbol("number"),
+  symbol: Symbol("symbol")
 })
 
 // an object represented on the Engine Schematic. We'll store the

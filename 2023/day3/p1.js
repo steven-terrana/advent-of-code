@@ -25,8 +25,8 @@ const parser = new RegExp(/(?<number>\d+)|(?<symbol>[^\d\.\n])/gm)
 
 
 const Types = Object.freeze({
-	number: Symbol("number"),
-	symbol: Symbol("symbol")
+  number: Symbol("number"),
+  symbol: Symbol("symbol")
 })
 
 class Thing {
