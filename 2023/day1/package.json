@@ -4,11 +4,11 @@
   "description": "## Part 1",
   "main": "p1.js",
   "scripts": {
-    "test": "node *_test.js"
+    "test": "jest --verbose"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "xregexp": "^5.1.1"
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }

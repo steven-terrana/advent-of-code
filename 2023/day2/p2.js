@@ -1,4 +1,4 @@
-const util = require('./util.js')
+const { getLines } = require('../helpers')
 
 // determines the least number of cubes required 
 // for a particular color in a particular game
@@ -17,8 +17,8 @@ function sumPower(games){
   return games.reduce( (sum, game) => sum += calculatePower(game), 0)
 }
 
-async function main(){
-  games = await util.getLines('input.txt')
+function main(){
+  games = getLines('input.txt')
   console.log(sumPower(games))
 }
 

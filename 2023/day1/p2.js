@@ -1,4 +1,4 @@
-const util = require('./util.js')
+const { getLines } = require('../helpers')
 
 function getCalibrationValue(input){
   // build a map of words to their integer counterparts
@@ -16,7 +16,7 @@ function getCalibrationValue(input){
 
   // build a regular expression that matches all digits
   // as well as the word representation of those digits
-  // reverse lookup is used to catch overlaps in digit words 
+  // reverse lookup (?<=) is used to catch overlaps in digit words 
   keys = Object.keys(word2num)
   regex = new RegExp(`(?<=(\\d|${keys.join('|')}))`, 'g')
 
@@ -38,14 +38,13 @@ function getCalibrationValue(input){
   return 10 * digits[0] + digits[digits.length - 1]
 }
 
-async function main(){
-  lines = await util.getLines('input.txt')
-  sum = 0
-  lines.map((input) => {
-    value = getCalibrationValue(input);
-    sum += value
-  });
-  console.log(sum)
+function sumCalibrationValues(inputs){
+  return inputs.reduce((sum, input) => sum += getCalibrationValue(input), 0);
+}
+
+function main(){
+  inputs = getLines('input.txt')
+  console.log(sumCalibrationValues(inputs))
 }
 
 // only run this when invoked directly
@@ -54,4 +53,4 @@ if (require.main === module) {
 }
 
 // for unit tests
-module.exports= { getCalibrationValue }
+module.exports = { sumCalibrationValues, getCalibrationValue }

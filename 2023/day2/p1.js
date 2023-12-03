@@ -1,4 +1,4 @@
-const util = require('./util.js')
+const { getLines } = require('../helpers')
 
 // gets the number of dice in a subset for a given color
 // returns 0 if this color dice isn't mentioned
@@ -47,8 +47,8 @@ function sumPossibleGameIds(games){
   return sum
 }
 
-async function main(){
-  games = await util.getLines('input.txt')
+function main(){
+  games = getLines('input.txt')
   console.log(sumPossibleGameIds(games))
 }
 

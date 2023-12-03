@@ -1,4 +1,4 @@
-const p1 = require('./p1.js')
+const { sumPossibleGameIds, getId, gameIsPossible, } = require('./p1.js')
 
 games = [
   "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green",
@@ -9,19 +9,19 @@ games = [
 ]
 
 test('sum of possible game ids is 8', () => {
-  expect(p1.sumPossibleGameIds(games)).toBe(8);
+  expect(sumPossibleGameIds(games)).toBe(8);
 });
 
 test('getId returns correct values', () => {
   games.forEach( (game, idx) => {
-    expect(p1.getId(game)).toBe(idx+1)
+    expect(getId(game)).toBe(idx+1)
   })
 })
 
 test.each([1, 2, 5])('game %i is possible', (g) => {
-  expect(p1.gameIsPossible(games[g-1]))
+  expect(gameIsPossible(games[g-1]))
 })
 
 test.each([3, 4])('game %i is impossible', (g) => {
-  expect(p1.gameIsPossible(games[g-1])).not.toBe(true)
+  expect(gameIsPossible(games[g-1])).not.toBe(true)
 })

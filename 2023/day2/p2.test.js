@@ -1,4 +1,4 @@
-const p2 = require('./p2.js')
+const { sumPower, calculatePower, fewestCubes } = require('./p2.js')
 
 // the example provides us with the expected fewest
 // cubes for each color and the power calculation for
@@ -48,23 +48,23 @@ data = [
 
 describe('determine fewest cubes needed',() => {
   test.each(data)('game $id requires a minimum of $red red cubes', ({id, game, red}) => {
-    expect(p2.fewestCubes(game, 'red')).toBe(red)
+    expect(fewestCubes(game, 'red')).toBe(red)
   })
   test.each(data)('game $id requires a minimum of $blue blue cubes', ({id, game, blue}) => {
-    expect(p2.fewestCubes(game, 'blue')).toBe(blue)
+    expect(fewestCubes(game, 'blue')).toBe(blue)
   })
   test.each(data)('game $id requires a minimum of $green green cubes', ({id, game, green}) => {
-    expect(p2.fewestCubes(game, 'green')).toBe(green)
+    expect(fewestCubes(game, 'green')).toBe(green)
   })
 })
 
 describe('validate game power', () => {
   test.each(data)('game $id has power $power', ({id, game, power}) => {
-    expect(p2.calculatePower(game)).toBe(power)
+    expect(calculatePower(game)).toBe(power)
   })
 })
 
 test.each([{'power': 2286}])('total power is $power', ({power}) => {
   games = data.map( g => g.game )
-  expect(p2.sumPower(games)).toBe(power)
+  expect(sumPower(games)).toBe(power)
 })

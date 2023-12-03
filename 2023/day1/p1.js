@@ -1,15 +1,19 @@
-const util = require('./util.js')
+const { getLines } = require("../helpers")
 
+// the calibration value is the first and last digit concatenated
 function getCalibrationValue(input){
   digits = input.match(/\d/g)
   return Number(digits[0] + digits[digits.length - 1])
 }
 
-async function main(){
-  lines = await util.getLines('input.txt')
-  sum = 0
-  lines.map((input) => sum += getCalibrationValue(input))
-  console.log(sum)
+// sum the calibration value from each line
+function sumCalibrationValues(inputs){
+  return inputs.reduce((s, input) => s += getCalibrationValue(input), 0)
+}
+
+function main(){
+  inputs = getLines('input.txt')
+  console.log(sumCalibrationValues(inputs))
 }
 
 // only run this when invoked directly
@@ -18,4 +22,4 @@ if (require.main === module) {
 }
 
 // for unit tests
-module.exports= { getCalibrationValue }
+module.exports = { sumCalibrationValues, getCalibrationValue }
