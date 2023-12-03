@@ -16,7 +16,7 @@ function getCalibrationValue(input){
 
   // build a regular expression that matches all digits
   // as well as the word representation of those digits
-  // reverse lookup (?<=) is used to catch overlaps in digit words 
+  // positive lookbehind (?<=) is used to catch overlaps in digit words 
   keys = Object.keys(word2num)
   regex = new RegExp(`(?<=(\\d|${keys.join('|')}))`, 'g')
 
