@@ -1,5 +1,6 @@
 import {getLines} from "../helpers/index.js"
 
+// represents a scratchoff
 export class Card {
   constructor(id, numbers, winning_numbers){
     this.id = id
@@ -7,10 +8,12 @@ export class Card {
     this.winning_numbers = winning_numbers
   }
 
+  // calculates number of matching numbers
   calculateNumCopies(){
     return this.numbers.filter( n => this.winning_numbers.includes(n) ).length
   }
 
+  // factory method to parse a string representation into a Card object
   static parse(cardString){
     let card = undefined
     try{
@@ -28,12 +31,15 @@ export class Card {
   }
 }
 
+// take a file containing lines of cards as strings and return 
+// a list of Card objects
 export function parseCards(file){
   return getLines(file).map( line => Card.parse(line)).filter(c => c)
 }
 
+// scratchoff every card until and count the pile at the end
 export function scratchOffandCountPile(cards){
-  // a list to track how many of each card index we have
+  // a list to track how many of each card we currently have
   let pile = Array(cards.length).fill(1)
 
   cards.forEach( (c, idx) => {
