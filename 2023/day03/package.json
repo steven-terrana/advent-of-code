@@ -1,0 +1,17 @@
+{
+  "name": "day3",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "exports": "./hitbox.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "debug": "node --inspect p2.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chalk": "^5.3.0",
+    "jest": "^29.7.0"
+  }
+}
