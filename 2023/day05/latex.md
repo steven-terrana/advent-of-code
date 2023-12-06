@@ -1,7 +1,7 @@
 # LaTex
 ## System of Equations
+### convert seed to soil
 ``` math
-convert seed to soil
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 49 \
 x + 2 &   50\leq x\leq 97 \
@@ -10,8 +10,8 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
+### convert soil to fertilizer
 ``` math
-convert soil to fertilizer
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 39 &   0\leq x\leq 14 \
@@ -21,8 +21,8 @@ x &   54\leq x\leq \infty \
 \end{cases}
 ```
 
+### convert fertilizer to water
 ``` math
-convert fertilizer to water
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 42 &   0\leq x\leq 6 \
@@ -33,8 +33,8 @@ x &   61\leq x\leq \infty \
 \end{cases}
 ```
 
+### convert water to light
 ``` math
-convert water to light
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 17 \
 x + 70 &   18\leq x\leq 24 \
@@ -43,8 +43,8 @@ x &   95\leq x\leq \infty \
 \end{cases}
 ```
 
+### convert light to temperature
 ``` math
-convert light to temperature
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 44 \
 x + 36 &   45\leq x\leq 63 \
@@ -54,8 +54,8 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
+### convert temperature to humidity
 ``` math
-convert temperature to humidity
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 1 &   0\leq x\leq 68 \
@@ -64,8 +64,8 @@ x &   70\leq x\leq \infty \
 \end{cases}
 ```
 
+### convert humidity to location
 ``` math
-convert humidity to location
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 55 \
 x + 4 &   56\leq x\leq 92 \
@@ -76,8 +76,8 @@ x &   97\leq x\leq \infty \
 
 ## Merging Equations step by step
 ### Step 0
+### convert seed to soil
 ``` math
-convert seed to soil
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 49 \
 x + 2 &   50\leq x\leq 97 \
@@ -87,8 +87,8 @@ x &   100\leq x\leq \infty \
 ```
 
 ### Step 1
+### convert seed to fertilizer
 ``` math
-convert undefined to undefined
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 39 &   0\leq x\leq 14 \
@@ -102,8 +102,8 @@ x &   100\leq x\leq \infty \
 ```
 
 ### Step 2
+### convert seed to water
 ``` math
-convert undefined to undefined
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 81 &   0\leq x\leq 6 \
@@ -121,8 +121,8 @@ x &   100\leq x\leq \infty \
 ```
 
 ### Step 3
+### convert seed to light
 ``` math
-convert undefined to undefined
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 81 &   0\leq x\leq 6 \
@@ -143,8 +143,8 @@ x &   100\leq x\leq \infty \
 ```
 
 ### Step 4
+### convert seed to temperature
 ``` math
-convert undefined to undefined
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 81 &   0\leq x\leq 6 \
@@ -168,8 +168,8 @@ x &   100\leq x\leq \infty \
 ```
 
 ### Step 5
+### convert seed to humidity
 ``` math
-convert undefined to undefined
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 82 &   0\leq x\leq 6 \
@@ -195,8 +195,8 @@ x &   100\leq x\leq \infty \
 ```
 
 ### Step 6
+### convert seed to location
 ``` math
-convert undefined to undefined
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 82 &   0\leq x\leq 6 \
