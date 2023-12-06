@@ -128,6 +128,7 @@ x &   97\leq x\leq \infty \
 </td>
 </tr>
 </table>
+
 ## Merging Equations step by step
 ### Step 0
 ``` math
