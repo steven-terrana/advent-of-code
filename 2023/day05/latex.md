@@ -1,4 +1,5 @@
 # LaTex
+
 ''' math
 f(x) = \begin{cases}
 x &   -infty\leq x\leq 49 \
