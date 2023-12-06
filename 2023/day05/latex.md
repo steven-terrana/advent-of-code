@@ -1,5 +1,11 @@
 # Latex
 
 ``` math
-\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)
+\usepackage{amsmath}
+\[ \begin{cases} 
+      0 & x\leq 0 \\
+      \frac{100-x}{100} & 0\leq x\leq 100 \\
+      0 & 100\leq x 
+   \end{cases}
+\]
 ```
