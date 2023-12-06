@@ -130,7 +130,16 @@ x &   97\leq x\leq \infty \
 </table>
 
 ## Merging Equations step by step
-### Step 0
+<table>
+<tr>
+<td> Composite Transformation </td> <td> Piecewise Inequality </td>
+</tr>
+<tr>
+<td>
+convert seed to soil
+</td>
+<td>
+
 ``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 49 \
@@ -140,7 +149,14 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
-### Step 1
+</td>
+</tr>
+<tr>
+<td>
+convert seed to fertilizer
+</td>
+<td>
+
 ``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
@@ -154,7 +170,14 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
-### Step 2
+</td>
+</tr>
+<tr>
+<td>
+convert seed to water
+</td>
+<td>
+
 ``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
@@ -172,7 +195,14 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
-### Step 3
+</td>
+</tr>
+<tr>
+<td>
+convert seed to light
+</td>
+<td>
+
 ``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
@@ -193,7 +223,14 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
-### Step 4
+</td>
+</tr>
+<tr>
+<td>
+convert seed to temperature
+</td>
+<td>
+
 ``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
@@ -217,7 +254,14 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
-### Step 5
+</td>
+</tr>
+<tr>
+<td>
+convert seed to humidity
+</td>
+<td>
+
 ``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
@@ -243,7 +287,14 @@ x &   100\leq x\leq \infty \
 \end{cases}
 ```
 
-### Step 6
+</td>
+</tr>
+<tr>
+<td>
+convert seed to location
+</td>
+<td>
+
 ``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
@@ -271,3 +322,7 @@ x - 80 &   98\leq x\leq 99 \
 x &   100\leq x\leq \infty \
 \end{cases}
 ```
+
+</td>
+</tr>
+</table>
