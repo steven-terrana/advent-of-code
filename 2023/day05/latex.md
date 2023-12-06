@@ -1,8 +1,15 @@
 # LaTex
 ## System of Equations
-| Transformation                  | System of Equations                                                                                                                                                                                                      |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| convert seed to soil            | ``` math
+<table>
+<tr>
+<td> Status </td> <td> Response </td>
+</tr>
+<tr>
+<td>
+convert seed to soil
+</td>
+<td>
+``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 49 \
 x + 2 &   50\leq x\leq 97 \
@@ -10,8 +17,15 @@ x - 48 &   98\leq x\leq 99 \
 x &   100\leq x\leq \infty \
 \end{cases}
 ```
-                                                       |
-| convert soil to fertilizer      | ``` math
+
+</td>
+</tr>
+<tr>
+<td>
+convert soil to fertilizer
+</td>
+<td>
+``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 39 &   0\leq x\leq 14 \
@@ -20,8 +34,15 @@ x - 15 &   52\leq x\leq 53 \
 x &   54\leq x\leq \infty \
 \end{cases}
 ```
-                           |
-| convert fertilizer to water     | ``` math
+
+</td>
+</tr>
+<tr>
+<td>
+convert fertilizer to water
+</td>
+<td>
+``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 42 &   0\leq x\leq 6 \
@@ -31,8 +52,15 @@ x - 4 &   53\leq x\leq 60 \
 x &   61\leq x\leq \infty \
 \end{cases}
 ```
- |
-| convert water to light          | ``` math
+
+</td>
+</tr>
+<tr>
+<td>
+convert water to light
+</td>
+<td>
+``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 17 \
 x + 70 &   18\leq x\leq 24 \
@@ -40,8 +68,15 @@ x - 7 &   25\leq x\leq 94 \
 x &   95\leq x\leq \infty \
 \end{cases}
 ```
-                                                        |
-| convert light to temperature    | ``` math
+
+</td>
+</tr>
+<tr>
+<td>
+convert light to temperature
+</td>
+<td>
+``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 44 \
 x + 36 &   45\leq x\leq 63 \
@@ -50,8 +85,15 @@ x - 32 &   77\leq x\leq 99 \
 x &   100\leq x\leq \infty \
 \end{cases}
 ```
-                          |
-| convert temperature to humidity | ``` math
+
+</td>
+</tr>
+<tr>
+<td>
+convert temperature to humidity
+</td>
+<td>
+``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq -1 \
 x + 1 &   0\leq x\leq 68 \
@@ -59,8 +101,15 @@ x - 69 &   69\leq x\leq 69 \
 x &   70\leq x\leq \infty \
 \end{cases}
 ```
-                                                         |
-| convert humidity to location    | ``` math
+
+</td>
+</tr>
+<tr>
+<td>
+convert humidity to location
+</td>
+<td>
+``` math
 f(x) = \begin{cases}
 x &   - \infty\leq x\leq 55 \
 x + 4 &   56\leq x\leq 92 \
@@ -68,7 +117,9 @@ x - 37 &   93\leq x\leq 96 \
 x &   97\leq x\leq \infty \
 \end{cases}
 ```
-                                                        |
+
+</td>
+</tr>
 ## Merging Equations step by step
 ### Step 0
 ``` math
