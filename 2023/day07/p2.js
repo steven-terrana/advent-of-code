@@ -1,10 +1,14 @@
 import fs from 'fs'
 
+// represents a single Card
 export class Card{
+  // ordered most valuable to least because i didn't feel like
+  // reversing what we got in the challenge instructions
   static cardOrder = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J' ]
   constructor(character){
     this.character = character
   }
+  // this function lets us easily compare two cards naturally using operators
   valueOf(){
     let reversed = Card.cardOrder.slice().reverse()
     return reversed.indexOf(this.character)
@@ -14,8 +18,22 @@ export class Card{
   }
 }
 
+// represents a single hand 
 export class Hand{
   static UNDEFINED = {name: 'high card', value: 0}
+  /*
+    {
+      name:      the name of the type
+      check:     a function that takes an array of card 
+                 character frequencies sorted from most
+                 to least and returns if the hand is this type
+      value:     relative value of this type for comparison
+      numJokers: a function that takes an array of card
+                 character frequencies sorted from most to
+                 least that returns the number of jokers the
+                 hand would need to be able to become this type
+    }
+  */
   static types = [
     {
       name: "five of a kind", 
@@ -62,22 +80,31 @@ export class Hand{
   }
 
   determineType(){
-    let count = {}
+    // lets count the jokers. if we have 5.. we already know
+    // what the hand is
     let numJokers = this.cards.filter( c => c.isJoker()).length
     if (numJokers == 5){
       return Hand.types[0]
     }
+    // create a map of card characters (besides jokers) 
+    // and how often they appear
+    let count = {}
     let cards = this.cards.filter( c => !c.isJoker() ).map( card => card.character )    
     let s = new Set(cards)
     for (let c of s.keys()){ 
       count[c] = 0
     }
     cards.forEach(c=> count[c]++)
+    // since we don't really care about what cards we have
+    // - just the hand type - we only need the frequency values
     let frequencies = Object.values(count)
     frequencies.sort().reverse()
-    // figure out type without applying jokers
+
+    // figure out type without applying jokers - this lets us do
+    // fewer checks later when jokers are present
     let type = Hand.types.find( t => t.check(frequencies) ) ?? Hand.UNDEFINED
-    // if there are jokers present, check to see if for hands 
+
+    // if there are jokers present, check to see if for types 
     // with a higher value than current type if we have enough
     // jokers to get there
     if (numJokers > 0){
@@ -90,10 +117,13 @@ export class Hand{
     return type
   }
 
+  // simplifies comparing two hands with operators
   valueOf(){
     return this.type.value
   }
 
+  // a function that we'll pass to Array.prototype.sort()
+  // to sort an array of Hands
   static compare(a, b){
     if (a < b){
       return -1
@@ -101,6 +131,8 @@ export class Hand{
     if (a > b){
       return 1
     }
+    // a and b are the same type so let's go 
+    // card by card until we have a winner
     if (a.type.value==b.type.value){
       for(let i = 0; i < a.cards.length; i++){
         if (a.cards[i] < b.cards[i]){
@@ -114,6 +146,7 @@ export class Hand{
     return 0
   }
 
+  // convenience method used by unit tests
   static fromString(s){
     return new Hand([...s].map(c => new Card(c), 0))
   }
