@@ -162,48 +162,49 @@ let animalNode = findAnimalNode(graph)
 let path = allSimplePaths(graph, animalNode, animalNode).find(p => p.length > 4)
 console.log('Part 1: ', Math.floor(path.length/2))
 
-console.log(path)
+
+let neighbors = graph.neighbors(animalNode)
+console.log([graph.getNodeAttributes(animalNode), ...neighbors.map( n => graph.getNodeAttributes(n))])
 
 
-// see: https://en.wikipedia.org/wiki/Point_in_polygon
-function pointsInPolygon(points, polygon){
-  let within = []
-  for (let r = 0; r < points.length; r++){
-    let row = points[r]
-    let chars=[]
-    let flag = false
-    for (let c = 0; c < row.length; c++){
-      // we flip the flag when we intersect with
-      // an edge of the polygon. The trick here is
-      // realizing our ray traces are horizontal so
-      // intersecting an edge means that the point
-      // is one of the polygon coordinates but isn't
-      // a '-'. 
-      if (polygon.includes(`(${c},${r})`)){
-        chars.push(chalk.blueBright(row[c]))
-        if (row[c] != '-'){
-          flag = !flag
-          continue
-        }
+let path = allSimplePaths(graph, animalNode, animalNode).filter(p => p.length > 4)
+let polygon = path[0].map( node => {
+  let a = graph.getNodeAttributes(node)
+  return [a.r, a.c]
+})
+
+function pointsInPolygon(field, polygon){
+  let pointsWithin = []
+  for(let r = 0; r < field.length; r++){
+    let r_coords = polygon.filter( p => p[0]==r).sort()
+    let r_chars = r_coords.map( c => field[c[0]][c[1]])
+    let segments = []
+    let segmentStarted = false
+    r_chars.forEach( (c, idx) => {
+      if (c == '|'){
+        segments.push(r_coords[idx])
       }
-      if (flag && row[c] != '-'){
-        chars.push(chalk.redBright(row[c]))
-        within.push([c,r])
-      } else if (row[c] != "-"){
-        chars.push(chalk.white.dim(row[c]))
+      if (['L', 'F'].includes(c)){
+        segmentStarted = true
+        segments.push([r_coords[idx]])
       }
+      if(segmentStarted && ['J', '7'].includes(c)){
+        segmentStarted = false
+        segments[segments.length-1].push(r_coords[idx])
+      }
+    })
+    // console.log(segments)
+    if (segments.length == 0){
+      continue
     }
-    console.log(chars.join(''))
+    /*
+      . . A----B + + C . . D + + E--F . . .
+    */
+    console.log(segments )
   }
-  return within
 }
 
-
-
-let pointsWithin = pointsInPolygon(field, path)
-console.log('Part 2: ', pointsWithin.length)
-
-
+pointsInPolygon(field, polygon)
 
 // let's get a pretty picture that shows the entire field, highlights the cycle,
 // and shows which nodes are encapsulated by it.

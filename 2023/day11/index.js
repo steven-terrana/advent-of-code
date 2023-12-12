@@ -5,7 +5,7 @@ import chalk from 'chalk'
 const old_galaxy = "@"
 
 // flips a 2D array over its diagonal
-// need this bc it makes finding empty colums easier
+// need this bc it makes finding empty columns easier
 function transpose(array){
   let newArray = []
   for(let i = 0; i < array.length; i++){
