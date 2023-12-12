@@ -65,23 +65,31 @@ function prettyPrint(schematic, a, b){
   let y = 0
   for (const r of schematic.split('\n')){
     let row = r.split('').map( (c, x) => {
+      let inA = false
+      let inB = false
+      var result = c
       if ( a.aabb.min_x <= x && x <= a.aabb.max_x && a.aabb.min_y <= y && y <= a.aabb.max_y){
-        return chalk.bgBlue(c)
+        result = chalk.bgBlue(c)
+        inA = true
       }
       if ( b.aabb.min_x <= x && x <= b.aabb.max_x && b.aabb.min_y <= y && y <= b.aabb.max_y){
-        return chalk.bgRed(c)
-      } else {
-        return c
+        result =  chalk.bgRed(c)
+        inB = true
       }
+      if ( inA && inB ){
+        result = chalk.bgGreen(c)
+      }
+      return result
     }).join('')
     console.log(row)
     y += 1
   }
+  console.log('----------------------')
 }
 
 // We're going to iterate over the engine schematic and construct 
 // all the.... Things
-const schematic = fs.readFileSync('input.txt', 'utf-8')
+const schematic = fs.readFileSync('test.txt', 'utf-8')
 const parser = new RegExp(/(?<number>\d+)|(?<symbol>[^\d\.\n])/gm)
 
 let things = []
@@ -110,9 +118,8 @@ let sum = 0
 for (const s of stars){
   let collisions = []
   for (const n of numbers){
-    // prettyPrint(schematic, n, s)
+    prettyPrint(schematic, n, s)
     if (s.aabb.intersects(n.aabb)){
-      // console.log(chalk.bold.green('collision!'))
       collisions.push(n)
     }
   }

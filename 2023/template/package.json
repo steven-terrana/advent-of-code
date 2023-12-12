@@ -1,9 +1,8 @@
 {
-  "name": "day06",
+  "name": "Advent of Code",
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "exports": "./index.js",
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest --runInBand --verbose"
   },

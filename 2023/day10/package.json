@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "@turf/turf": "^6.5.0",
+    "chalk": "^5.3.0",
     "graphology": "^0.25.4",
     "graphology-gexf": "^0.12.1",
     "graphology-simple-path": "^0.2.0",

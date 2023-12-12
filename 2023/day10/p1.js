@@ -3,6 +3,7 @@ import Graph from 'graphology'
 import gexf from 'graphology-gexf'
 import {allSimplePaths, allSimpleEdgePaths} from 'graphology-simple-path'
 import * as turf from '@turf/turf'
+import chalk from 'chalk'
 
 const animal = 'S'
 
@@ -148,7 +149,7 @@ function findAnimalNode(){
 }
 
 // parse the field into an undirected graph
-const field = parseField('input.txt')
+const field = parseField('test.txt')
 let graph = createGraph(field)
 
 // find the animal in that graph
@@ -158,33 +159,52 @@ let animalNode = findAnimalNode(graph)
 // represent a loop. There will be two of them, and they are just the same
 // path in reverse order. The furthest you can get away from the start is 
 // the length of the cycle divided by two.
-let edges = allSimpleEdgePaths(graph, animalNode, animalNode).filter(p => p.length > 3)
-console.log('Part 1: ', edges[0].length/2)
+let path = allSimplePaths(graph, animalNode, animalNode).find(p => p.length > 4)
+console.log('Part 1: ', Math.floor(path.length/2))
 
-// For part 2, we need to find how many nodes are encapsulated by the cycle.
-// First, we'll use TurfJS to convert the nodes to GeoJSON points.
-// Then, we'll define a polygon via the coordinates of the nodes in the cycle.
-// Finally, we'll use TurfJS to find nodes in the graph that are within the polygon. 
-// --> apparently this calculation includes the polygon itself, so we'll subtract
-//     the number of coordinates defining the polygon
-let points = turf.points(graph.mapNodes( node => {
-  let a = graph.getNodeAttributes(node)
-  return [a.c, a.r]
-}))
+console.log(path)
 
-let path = allSimplePaths(graph, animalNode, animalNode).filter(p => p.length > 4)
-let polygon = turf.polygon([path[0].map( node => {
-  let a = graph.getNodeAttributes(node)
-  return [a.c, a.r]
-})])
 
-let tiles = turf.pointsWithinPolygon(points, polygon)
-let p = tiles.features.length - polygon.geometry.coordinates[0].length + 1
-console.log('Part 2: ', p)
+// see: https://en.wikipedia.org/wiki/Point_in_polygon
+function pointsInPolygon(points, polygon){
+  let within = []
+  for (let r = 0; r < points.length; r++){
+    let row = points[r]
+    let chars=[]
+    let flag = false
+    for (let c = 0; c < row.length; c++){
+      // we flip the flag when we intersect with
+      // an edge of the polygon. The trick here is
+      // realizing our ray traces are horizontal so
+      // intersecting an edge means that the point
+      // is one of the polygon coordinates but isn't
+      // a '-'. 
+      if (polygon.includes(`(${c},${r})`)){
+        chars.push(chalk.blueBright(row[c]))
+        if (row[c] != '-'){
+          flag = !flag
+          continue
+        }
+      }
+      if (flag && row[c] != '-'){
+        chars.push(chalk.redBright(row[c]))
+        within.push([c,r])
+      } else if (row[c] != "-"){
+        chars.push(chalk.white.dim(row[c]))
+      }
+    }
+    console.log(chars.join(''))
+  }
+  return within
+}
 
-let tilePoints = tiles.features.map( f => f.geometry.coordinates )
-let pointsWithin = tilePoints.filter(p => !path[0].includes(`(${p[0]},${p[1]})`)).map(p => `(${p[0]},${p[1]})`)
+
+
+let pointsWithin = pointsInPolygon(field, path)
+console.log('Part 2: ', pointsWithin.length)
+
+
 
 // let's get a pretty picture that shows the entire field, highlights the cycle,
 // and shows which nodes are encapsulated by it.
-exportGraph(graph, edges[0], pointsWithin, 'visualize/public/graph.gexf')
+// exportGraph(graph, edges[0], pointsWithin, 'visualize/public/graph.gexf')

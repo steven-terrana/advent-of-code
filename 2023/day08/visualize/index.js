@@ -8,7 +8,8 @@
 import Sigma from "sigma";
 import Graph from "graphology";
 import { parse } from "graphology-gexf/browser";
-import random from 'graphology-layout/random';
+// import random from 'graphology-layout/random';
+import {circular} from 'graphology-layout';
 import forceAtlas2 from 'graphology-layout-forceatlas2'
 
 // Load external GEXF file:
@@ -17,7 +18,7 @@ fetch("./graph.gexf")
   .then((gexf) => {
     // Parse GEXF string:
     const graph = parse(Graph, gexf);
-    random.assign(graph)
+    circular.assign(graph)
     
     // Retrieve some useful DOM elements:
     const container = document.getElementById("sigma-container");
