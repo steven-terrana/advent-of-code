@@ -148,7 +148,7 @@ function findAnimalNode(){
 }
 
 // parse the field into an undirected graph
-const field = parseField('input.txt')
+const field = parseField('test.txt')
 let graph = createGraph(field)
 
 // find the animal in that graph
@@ -161,30 +161,50 @@ let animalNode = findAnimalNode(graph)
 let edges = allSimpleEdgePaths(graph, animalNode, animalNode).filter(p => p.length > 3)
 console.log('Part 1: ', edges[0].length/2)
 
-// For part 2, we need to find how many nodes are encapsulated by the cycle.
-// First, we'll use TurfJS to convert the nodes to GeoJSON points.
-// Then, we'll define a polygon via the coordinates of the nodes in the cycle.
-// Finally, we'll use TurfJS to find nodes in the graph that are within the polygon. 
-// --> apparently this calculation includes the polygon itself, so we'll subtract
-//     the number of coordinates defining the polygon
-let points = turf.points(graph.mapNodes( node => {
-  let a = graph.getNodeAttributes(node)
-  return [a.c, a.r]
-}))
+
+let neighbors = graph.neighbors(animalNode)
+console.log([graph.getNodeAttributes(animalNode), ...neighbors.map( n => graph.getNodeAttributes(n))])
+
 
 let path = allSimplePaths(graph, animalNode, animalNode).filter(p => p.length > 4)
-let polygon = turf.polygon([path[0].map( node => {
+let polygon = path[0].map( node => {
   let a = graph.getNodeAttributes(node)
-  return [a.c, a.r]
-})])
+  return [a.r, a.c]
+})
 
-let tiles = turf.pointsWithinPolygon(points, polygon)
-let p = tiles.features.length - polygon.geometry.coordinates[0].length + 1
-console.log('Part 2: ', p)
+function pointsInPolygon(field, polygon){
+  let pointsWithin = []
+  for(let r = 0; r < field.length; r++){
+    let r_coords = polygon.filter( p => p[0]==r).sort()
+    let r_chars = r_coords.map( c => field[c[0]][c[1]])
+    let segments = []
+    let segmentStarted = false
+    r_chars.forEach( (c, idx) => {
+      if (c == '|'){
+        segments.push(r_coords[idx])
+      }
+      if (['L', 'F'].includes(c)){
+        segmentStarted = true
+        segments.push([r_coords[idx]])
+      }
+      if(segmentStarted && ['J', '7'].includes(c)){
+        segmentStarted = false
+        segments[segments.length-1].push(r_coords[idx])
+      }
+    })
+    // console.log(segments)
+    if (segments.length == 0){
+      continue
+    }
+    /*
+      . . A----B + + C . . D + + E--F . . .
+    */
+    console.log(segments )
+  }
+}
 
-let tilePoints = tiles.features.map( f => f.geometry.coordinates )
-let pointsWithin = tilePoints.filter(p => !path[0].includes(`(${p[0]},${p[1]})`)).map(p => `(${p[0]},${p[1]})`)
+pointsInPolygon(field, polygon)
 
 // let's get a pretty picture that shows the entire field, highlights the cycle,
 // and shows which nodes are encapsulated by it.
-exportGraph(graph, edges[0], pointsWithin, 'visualize/public/graph.gexf')
+// exportGraph(graph, edges[0], pointsWithin, 'visualize/public/graph.gexf')
