@@ -2,7 +2,6 @@ import fs from 'fs'
 import _ from 'lodash'
 import chalk from 'chalk'
 
-
 const RAYS = {
   up: {
     dir: [-1,0], 
@@ -13,7 +12,7 @@ const RAYS = {
     },
     findHit: (ray, group) => {
       let hit = group[ray.src[1]]?.findLast(m => m.loc[0] < ray.src[0])
-      let end = hit == undefined ? [Number.NEGATIVE_INFINITY, ray.src[1]] : hit.loc
+      let end = hit == undefined ? [0, ray.src[1]] : hit.loc
       let reflections = []
       RAYS.up.bounce[hit?.type]?.forEach( r => {
         reflections.push({
@@ -32,9 +31,9 @@ const RAYS = {
      '\\': [ 'right' ],
       '/': [ 'left'  ]
     },
-    findHit: (ray, group) => {
+    findHit: (ray, group, max) => {
       let hit = group[ray.src[1]]?.find(m => m.loc[0] > ray.src[0])
-      let end = hit == undefined ? [Number.POSITIVE_INFINITY, ray.src[1]] : hit.loc
+      let end = hit == undefined ? [max[0], ray.src[1]] : hit.loc
       let reflections = []
       RAYS.down.bounce[hit?.type]?.forEach( r => {
         reflections.push({
@@ -53,9 +52,9 @@ const RAYS = {
      '\\': [ 'up' ],
       '/': [ 'down' ]
     },
-    findHit: (ray, group) => {
+    findHit: (ray, group, max) => {
       let hit = group[ray.src[0]]?.findLast(m => m.loc[1] < ray.src[1])
-      let end = hit == undefined ? [ray.src[0], Number.NEGATIVE_INFINITY] : hit.loc
+      let end = hit == undefined ? [ray.src[0], 0] : hit.loc
       let reflections = []
       RAYS.left.bounce[hit?.type]?.forEach( r => {
         reflections.push({
@@ -74,9 +73,9 @@ const RAYS = {
      '\\': [ 'down' ],
       '/': [ 'up' ]
     },
-    findHit: (ray, group) => {
+    findHit: (ray, group, max) => {
       let hit = group[ray.src[0]]?.find(m => m.loc[1] > ray.src[1])
-      let end = hit == undefined ? [ray.src[0], Number.POSITIVE_INFINITY] : hit.loc
+      let end = hit == undefined ? [ray.src[0], max[1]] : hit.loc
       let reflections = []
       RAYS.right.bounce[hit?.type]?.forEach( r => {
         reflections.push({
@@ -85,7 +84,7 @@ const RAYS = {
           end: undefined
         })
       })
-      return [end, reflections]
+      return [hit, reflections]
     }
   }
 }
@@ -114,6 +113,10 @@ class Mirrors {
   shootBeam(beam){
     this.untraced.push(beam)
     this.trace()
+    let energy = this.countEnergized()
+    this.untraced = []
+    this.traced = []
+    return energy
   }
 
   trace(){
@@ -121,7 +124,7 @@ class Mirrors {
       let ray = this.untraced.pop()
       let R = RAYS[ray.dir]
       let reflections
-      [ray.end, reflections] = R.findHit(ray, this.group[Math.abs(R.dir[0])])
+      [ray.end, reflections] = R.findHit(ray, this.group[Math.abs(R.dir[0])], [this.rows-1, this.cols-1])
       this.traced.push(ray)
       for (let r of reflections){
         let all = [...this.traced, ...this.untraced]
@@ -148,6 +151,8 @@ class Mirrors {
     return false
   }
 
+  // naive
+  /*
   countEnergized(){
     let sum = 0
     for(let r = 0; r < this.rows; r++){
@@ -158,6 +163,17 @@ class Mirrors {
       }
     }
     return sum
+  }
+  */
+  // the total energy is the sum of the lengths
+  // of the rays, less any intersections and overlaps
+  countEnergized(){
+    let sum = 0
+    let counted = []
+    for (let ray of this.traced){
+      let length = _.zip(ray.src, ray.end).reduce( (sum, d) => sum + Math.abs(_.subtract(...d)), 0)
+      sum += length
+    }
   }
 
   print(){
@@ -202,12 +218,53 @@ let file
 
 let mirrors = Mirrors.parse(file)
 
-mirrors.shootBeam({
+let energy = mirrors.shootBeam({
   src: [0,-1],
   dir: 'right',
   end: undefined
 })
+console.log('Part 1:', energy)
 
-// mirrors.print()
+let maxEnergy = Number.NEGATIVE_INFINITY
 
-console.log(mirrors.countEnergized())
+// // try everything along the top
+for(let i = 0; i < mirrors.cols; i++){
+  let energy = mirrors.shootBeam({
+    src: [-1,i],
+    dir: 'down',
+    end: undefined
+  })
+  maxEnergy = Math.max(maxEnergy, energy)
+}
+
+// // try everything along the bottom
+for(let i = 0; i < mirrors.cols; i++){
+  let energy = mirrors.shootBeam({
+    src: [mirrors.rows+1,i],
+    dir: 'up',
+    end: undefined
+  })
+  maxEnergy = Math.max(maxEnergy, energy)
+}
+
+// // try everything along the left
+for(let i = 0; i < mirrors.rows; i++){
+  let energy = mirrors.shootBeam({
+    src: [i, -1],
+    dir: 'right',
+    end: undefined
+  })
+  maxEnergy = Math.max(maxEnergy, energy)
+}
+
+// // try everything all the right
+for(let i = 0; i < mirrors.rows; i++){
+  let energy = mirrors.shootBeam({
+    src: [mirrors.cols + 1, -1],
+    dir: 'left',
+    end: undefined
+  })
+  maxEnergy = Math.max(maxEnergy, energy)
+}
+
+console.log('Part 2:', maxEnergy)
