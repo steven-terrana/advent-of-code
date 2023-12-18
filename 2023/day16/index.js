@@ -84,7 +84,7 @@ const RAYS = {
           end: undefined
         })
       })
-      return [hit, reflections]
+      return [end, reflections]
     }
   }
 }
@@ -151,8 +151,8 @@ class Mirrors {
     return false
   }
 
-  // naive
-  /*
+  // naive (cough, slow, cough)
+  // but works!
   countEnergized(){
     let sum = 0
     for(let r = 0; r < this.rows; r++){
@@ -163,17 +163,6 @@ class Mirrors {
       }
     }
     return sum
-  }
-  */
-  // the total energy is the sum of the lengths
-  // of the rays, less any intersections and overlaps
-  countEnergized(){
-    let sum = 0
-    let counted = []
-    for (let ray of this.traced){
-      let length = _.zip(ray.src, ray.end).reduce( (sum, d) => sum + Math.abs(_.subtract(...d)), 0)
-      sum += length
-    }
   }
 
   print(){
