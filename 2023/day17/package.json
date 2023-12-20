@@ -1,0 +1,29 @@
+{
+  "name": "Advent of Code",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest --runInBand --verbose"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@datastructures-js/priority-queue": "^6.3.0",
+    "@pyroscope/nodejs": "^0.2.6",
+    "ansi-escapes": "^6.2.0",
+    "ansi-to-html": "^0.7.2",
+    "asciichart": "^1.5.25",
+    "chalk": "^5.3.0",
+    "fastpriorityqueue": "^0.7.4",
+    "heapify": "^0.6.0",
+    "jest": "^29.7.0",
+    "jest-environment-node": "^29.7.0",
+    "lodash": "^4.17.21",
+    "plotly": "^1.0.6",
+    "progress": "^2.0.3"
+  },
+  "dependencies": {
+    "plotly.js-dist-min": "^2.27.1"
+  }
+}
