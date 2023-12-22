@@ -1,0 +1,16 @@
+{
+  "name": "Advent of Code",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "graphology-gexf": "^0.12.1",
+    "graphology-layout": "^0.6.1",
+    "graphology-simple-path": "^0.2.0",
+    "graphology-svg": "^0.1.3",
+    "mathjs": "^12.2.1",
+    "nerdamer": "^1.1.13"
+  }
+}
