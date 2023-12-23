@@ -1,0 +1,9 @@
+{
+  "name": "Advent of Code",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {}
+}

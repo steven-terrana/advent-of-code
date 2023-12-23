@@ -1,0 +1,59 @@
+&hj -> rx
+  &jf -> hj
+    &rt -> jf, hv, bs, kt, fn
+      %bs -> rt, mk
+      %pn -> rt
+      %vm -> rt, pn
+      %vj -> rt, rr
+      %zz -> rt, jg
+      %bt -> rt, fn
+      %jg -> rt, vm 
+      %rr -> rt, hv 
+      %mk -> rt, kt
+  &ks -> hj
+    &sl -> fk, rq, fz, xd, ks
+      %rq -> sl, xd
+      %dc -> sl
+      %ql -> sl, fz
+      %jl -> sl, mr
+      %mr -> sl, dc
+      %jc -> sl, fk 
+      %gv -> sl, jl
+      %mm -> sl, ql
+      %cc -> sl, gv
+  &qs -> hj
+    &fv -> xt, qs, gs, cn, lx, hk
+      %kp -> fv, pq
+      %cn -> fv, kp
+      %bc -> fv
+      %jr -> fv, bc
+      %gn -> fv, hk
+      %jx -> fv, bf
+      %bf -> fv, jr
+      %pq -> fv, lx
+  &zk -> hj
+    &gk -> mx, sc, vq, bz, ng, zk, sm
+      %sb -> gk
+      %vz -> gk, lg 
+      %rk -> gk, sb
+      %bz -> gk, sc
+      %rl -> gk, rh 
+      %rh -> gk, vq
+      %lg -> gk, rk
+
+broadcaster -> bs, rq, cn, bz
+%ng -> vz
+%hv -> zz
+%sc -> sm
+%sm -> mx
+%gs -> xt
+%kt -> bt
+%hk -> jx
+%fn -> vj
+%vq -> ng
+%fk -> cc
+%xt -> gn
+%lx -> gs
+%mx -> rl
+%fz -> jc
+%xd -> mm
