@@ -6,7 +6,7 @@
       %vm -> rt, pn
       %vj -> rt, rr
       %zz -> rt, jg
-      %bt -> rt, fn
+      %bt -> rt, fnf
       %jg -> rt, vm 
       %rr -> rt, hv 
       %mk -> rt, kt
