@@ -10,5 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "chalk": "^5.3.0",
+    "graphology": "^0.25.4",
+    "graphology-gexf": "^0.12.1",
+    "graphology-shortest-path": "^2.0.2",
+    "graphology-simple-path": "^0.2.0"
   }
 }

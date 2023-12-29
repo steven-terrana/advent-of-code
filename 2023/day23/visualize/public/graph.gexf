@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf version="1.2" xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http:///www.gexf.net/1.1draft/viz">
+  <meta/>
+  <graph defaultedgetype="undirected">
+    <nodes>
+      <node id="[0,1]" label="[0,1]">
+        <viz:size value="5"/>
+        <viz:position x="1" y="0"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[9,61]" label="[9,61]">
+        <viz:size value="5"/>
+        <viz:position x="61" y="-9"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[11,37]" label="[11,37]">
+        <viz:size value="5"/>
+        <viz:position x="37" y="-11"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[11,103]" label="[11,103]">
+        <viz:size value="5"/>
+        <viz:position x="103" y="-11"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[13,5]" label="[13,5]">
+        <viz:size value="5"/>
+        <viz:position x="5" y="-13"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[15,83]" label="[15,83]">
+        <viz:size value="5"/>
+        <viz:position x="83" y="-15"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[33,5]" label="[33,5]">
+        <viz:size value="5"/>
+        <viz:position x="5" y="-33"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[35,79]" label="[35,79]">
+        <viz:size value="5"/>
+        <viz:position x="79" y="-35"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[39,33]" label="[39,33]">
+        <viz:size value="5"/>
+        <viz:position x="33" y="-39"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[43,67]" label="[43,67]">
+        <viz:size value="5"/>
+        <viz:position x="67" y="-43"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[43,105]" label="[43,105]">
+        <viz:size value="5"/>
+        <viz:position x="105" y="-43"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[43,129]" label="[43,129]">
+        <viz:size value="5"/>
+        <viz:position x="129" y="-43"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[53,39]" label="[53,39]">
+        <viz:size value="5"/>
+        <viz:position x="39" y="-53"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[55,59]" label="[55,59]">
+        <viz:size value="5"/>
+        <viz:position x="59" y="-55"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[55,135]" label="[55,135]">
+        <viz:size value="5"/>
+        <viz:position x="135" y="-55"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[57,7]" label="[57,7]">
+        <viz:size value="5"/>
+        <viz:position x="7" y="-57"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[57,75]" label="[57,75]">
+        <viz:size value="5"/>
+        <viz:position x="75" y="-57"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[67,101]" label="[67,101]">
+        <viz:size value="5"/>
+        <viz:position x="101" y="-67"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[75,63]" label="[75,63]">
+        <viz:size value="5"/>
+        <viz:position x="63" y="-75"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[77,7]" label="[77,7]">
+        <viz:size value="5"/>
+        <viz:position x="7" y="-77"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[77,125]" label="[77,125]">
+        <viz:size value="5"/>
+        <viz:position x="125" y="-77"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[79,101]" label="[79,101]">
+        <viz:size value="5"/>
+        <viz:position x="101" y="-79"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[83,75]" label="[83,75]">
+        <viz:size value="5"/>
+        <viz:position x="75" y="-83"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[85,35]" label="[85,35]">
+        <viz:size value="5"/>
+        <viz:position x="35" y="-85"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[99,63]" label="[99,63]">
+        <viz:size value="5"/>
+        <viz:position x="63" y="-99"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[99,99]" label="[99,99]">
+        <viz:size value="5"/>
+        <viz:position x="99" y="-99"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[101,37]" label="[101,37]">
+        <viz:size value="5"/>
+        <viz:position x="37" y="-101"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[101,87]" label="[101,87]">
+        <viz:size value="5"/>
+        <viz:position x="87" y="-101"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[101,129]" label="[101,129]">
+        <viz:size value="5"/>
+        <viz:position x="129" y="-101"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[111,11]" label="[111,11]">
+        <viz:size value="5"/>
+        <viz:position x="11" y="-111"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[125,89]" label="[125,89]">
+        <viz:size value="5"/>
+        <viz:position x="89" y="-125"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[127,39]" label="[127,39]">
+        <viz:size value="5"/>
+        <viz:position x="39" y="-127"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[127,103]" label="[127,103]">
+        <viz:size value="5"/>
+        <viz:position x="103" y="-127"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[133,59]" label="[133,59]">
+        <viz:size value="5"/>
+        <viz:position x="59" y="-133"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[133,127]" label="[133,127]">
+        <viz:size value="5"/>
+        <viz:position x="127" y="-133"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="[140,139]" label="[140,139]">
+        <viz:size value="5"/>
+        <viz:position x="139" y="-140"/>
+        <viz:shape value="circle"/>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="geid_206_0" source="[0,1]" target="[13,5]" label="81">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_1" source="[9,61]" target="[15,83]" label="144">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_2" source="[9,61]" target="[43,67]" label="196">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_3" source="[9,61]" target="[11,37]" label="286">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_4" source="[11,37]" target="[39,33]" label="144">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_5" source="[11,37]" target="[13,5]" label="258">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_6" source="[11,103]" target="[15,83]" label="176">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_7" source="[11,103]" target="[43,105]" label="198">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_8" source="[11,103]" target="[43,129]" label="602">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_9" source="[13,5]" target="[33,5]" label="88">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_10" source="[15,83]" target="[35,79]" label="84">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_11" source="[33,5]" target="[57,7]" label="138">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_12" source="[33,5]" target="[39,33]" label="154">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_13" source="[35,79]" target="[43,67]" label="48">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_14" source="[35,79]" target="[57,75]" label="106">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_15" source="[35,79]" target="[43,105]" label="230">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_16" source="[39,33]" target="[53,39]" label="48">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_17" source="[39,33]" target="[43,67]" label="242">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_18" source="[43,67]" target="[55,59]" label="36">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_19" source="[43,105]" target="[43,129]" label="136">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_20" source="[43,105]" target="[67,101]" label="148">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_21" source="[43,129]" target="[55,135]" label="106">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_22" source="[53,39]" target="[55,59]" label="118">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_23" source="[53,39]" target="[85,35]" label="164">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_24" source="[53,39]" target="[57,7]" label="208">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_25" source="[55,59]" target="[57,75]" label="46">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_26" source="[55,59]" target="[75,63]" label="116">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_27" source="[55,135]" target="[77,125]" label="120">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_28" source="[55,135]" target="[67,101]" label="154">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_29" source="[57,7]" target="[77,7]" label="140">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_30" source="[57,75]" target="[83,75]" label="102">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_31" source="[57,75]" target="[67,101]" label="152">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_32" source="[67,101]" target="[79,101]" label="32">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_33" source="[75,63]" target="[83,75]" label="48">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_34" source="[75,63]" target="[99,63]" label="148">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_35" source="[75,63]" target="[85,35]" label="210">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_36" source="[77,7]" target="[85,35]" label="200">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_37" source="[77,7]" target="[111,11]" label="226">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_38" source="[77,125]" target="[79,101]" label="134">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_39" source="[77,125]" target="[101,129]" label="236">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_40" source="[79,101]" target="[83,75]" label="118">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_41" source="[79,101]" target="[99,99]" label="150">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_42" source="[83,75]" target="[101,87]" label="118">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_43" source="[85,35]" target="[101,37]" label="58">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_44" source="[99,63]" target="[101,87]" label="82">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_45" source="[99,63]" target="[101,37]" label="96">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_46" source="[99,63]" target="[133,59]" label="278">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_47" source="[99,99]" target="[101,87]" label="50">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_48" source="[99,99]" target="[101,129]" label="180">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_49" source="[99,99]" target="[127,103]" label="184">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_50" source="[101,37]" target="[127,39]" label="156">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_51" source="[101,37]" target="[111,11]" label="184">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_52" source="[101,87]" target="[125,89]" label="166">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_53" source="[101,129]" target="[133,127]" label="286">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_54" source="[111,11]" target="[127,39]" label="468">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_55" source="[125,89]" target="[127,103]" label="112">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_56" source="[125,89]" target="[133,59]" label="234">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_57" source="[127,39]" target="[133,59]" label="110">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_58" source="[127,103]" target="[133,127]" label="170">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+      <edge id="geid_206_59" source="[140,139]" target="[133,127]" label="75">
+        <viz:shape value="dotted"/>
+        <viz:thickness value="10"/>
+      </edge>
+    </edges>
+  </graph>
+</gexf>
