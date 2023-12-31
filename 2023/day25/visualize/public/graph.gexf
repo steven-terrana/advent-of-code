@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf version="1.2" xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http:///www.gexf.net/1.1draft/viz">
+  <meta/>
+  <graph defaultedgetype="directed">
+    <nodes>
+      <node id="jqt" label="jqt">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="0.5115861296653748" y="0.8863189816474915"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node>
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-4.304913520812988" y="-10.680842399597168"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="rhn" label="rhn">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="11.764388084411621" y="-3.7825393676757812"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="xhk" label="xhk">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="3.5902457237243652" y="-20.018413543701172"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="nvd" label="nvd">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-4.460741996765137" y="12.13177490234375"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="rsh" label="rsh">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-13.406015396118164" y="-18.54690933227539"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="frs" label="frs">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="10.699755668640137" y="9.24820327758789"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="pzl" label="pzl">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-14.83767032623291" y="5.493499279022217"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="lsr" label="lsr">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-16.11125373840332" y="-6.550151348114014"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="hfx" label="hfx">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-26.32666778564453" y="0.6042097806930542"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="cmg" label="cmg">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-2.6773102283477783" y="24.006168365478516"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="qnr" label="qnr">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="21.07293701171875" y="16.159847259521484"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="lhk" label="lhk">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="9.177727699279785" y="21.155229568481445"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="bvb" label="bvb">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="31.910140991210938" y="10.07048511505127"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="ntq" label="ntq">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="15.107894897460938" y="-15.767973899841309"/>
+        <viz:shape value="circle"/>
+      </node>
+      <node id="rzs" label="rzs">
+        <viz:color r="0" g="0" b="0"/>
+        <viz:size value="NaN"/>
+        <viz:position x="-22.28619384765625" y="15.110004425048828"/>
+        <viz:shape value="circle"/>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="geid_11_0" source="jqt" label="jqt-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_1" source="jqt" target="rhn" label="jqt-rhn">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_2" source="jqt" target="xhk" label="jqt-xhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_3" source="jqt" target="nvd" label="jqt-nvd">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_4" source="rsh" label="rsh-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_5" source="rsh" target="frs" label="rsh-frs">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_6" source="rsh" target="pzl" label="rsh-pzl">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_7" source="rsh" target="lsr" label="rsh-lsr">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_8" source="xhk" label="xhk-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_9" source="xhk" target="hfx" label="xhk-hfx">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_10" source="cmg" label="cmg-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_11" source="cmg" target="qnr" label="cmg-qnr">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_12" source="cmg" target="nvd" label="cmg-nvd">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_13" source="cmg" target="lhk" label="cmg-lhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_14" source="cmg" target="bvb" label="cmg-bvb">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_15" source="rhn" label="rhn-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_16" source="rhn" target="xhk" label="rhn-xhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_17" source="rhn" target="bvb" label="rhn-bvb">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_18" source="rhn" target="hfx" label="rhn-hfx">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_19" source="bvb" label="bvb-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_20" source="bvb" target="xhk" label="bvb-xhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_21" source="bvb" target="hfx" label="bvb-hfx">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_22" source="pzl" label="pzl-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_23" source="pzl" target="lsr" label="pzl-lsr">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_24" source="pzl" target="hfx" label="pzl-hfx">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_25" source="pzl" target="nvd" label="pzl-nvd">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_26" source="qnr" label="qnr-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_27" source="qnr" target="nvd" label="qnr-nvd">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_28" source="ntq" label="ntq-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_29" source="ntq" target="jqt" label="ntq-jqt">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_30" source="ntq" target="hfx" label="ntq-hfx">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_31" source="ntq" target="bvb" label="ntq-bvb">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_32" source="ntq" target="xhk" label="ntq-xhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_33" source="nvd" label="nvd-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_34" source="nvd" target="lhk" label="nvd-lhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_35" source="lsr" label="lsr-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_36" source="lsr" target="lhk" label="lsr-lhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_37" source="rzs" label="rzs-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_38" source="rzs" target="qnr" label="rzs-qnr">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_39" source="rzs" target="cmg" label="rzs-cmg">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_40" source="rzs" target="lsr" label="rzs-lsr">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_41" source="rzs" target="rsh" label="rzs-rsh">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_42" source="frs" label="frs-">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_43" source="frs" target="qnr" label="frs-qnr">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_44" source="frs" target="lhk" label="frs-lhk">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+      <edge id="geid_11_45" source="frs" target="lsr" label="frs-lsr">
+        <viz:color r="174" g="174" b="174"/>
+        <viz:position/>
+        <viz:shape value="dotted"/>
+        <viz:thickness value="20"/>
+      </edge>
+    </edges>
+  </graph>
+</gexf>

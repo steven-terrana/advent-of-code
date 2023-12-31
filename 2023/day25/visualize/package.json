@@ -1,0 +1,20 @@
+{
+  "name": "sigma-example-load-gexf-file",
+  "version": "1.0.0",
+  "description": "This example loads a GEXF graph file and displays it with a few classic interactive features.",
+  "main": "index.js",
+  "scripts": {
+    "start": "kotatsu serve index.js --public / ./public"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "graphology": "^0.23.0",
+    "graphology-gexf": "^0.9.0",
+    "sigma": "latest"
+  },
+  "devDependencies": {
+    "graphology-layout": "^0.6.1",
+    "graphology-layout-forceatlas2": "^0.10.1",
+    "kotatsu": "^0.22.3"
+  }
+}

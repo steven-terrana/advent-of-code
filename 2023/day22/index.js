@@ -30,6 +30,7 @@ class Brick {
     this.maxZ = Math.max(a[2], b[2])
     this.supporting = []
     this.supportedBy = []
+    this.falling = false // for part 2
   }
   /*
     this brick is resting on another one
@@ -56,42 +57,35 @@ class Brick {
   }
 }
 
-function falling(_bricks){
-  let fallen = new Set()
-  // bricks are still falling if we get through a loop and nothing has moved
-  let numFalls = 1
-  while(numFalls > 0){
-    numFalls = 0
-    bricksLoop: for (let i = 0; i < _bricks.length; i++){
-      let brick = _bricks[i]
-      // see if this brick is resting on the ground
-      if (brick.minZ === 1){
-        continue
-      }
-      // otherwise, see if we're resting on another brick
-      for (let p of _bricks){
-        if(p.id === brick.id){
-          continue
-        }
-        if (brick.isRestingOn(p)){
-          continue bricksLoop
-        }
-      }
-      // it's possible to fall, so fall
-      brick.fall()
-      fallen.add(brick.id)
-      numFalls++
-    }
-  }
-  return fallen
-}
-
 let bricks = parse()
 bricks.sort( (i,j) => Math.min(i.a[2], i.b[2]) - Math.min(j.a[2], j.b[2]))
 
-falling(bricks)
+// drop all the bricks and let them settle
+let numFalls = 1
+while(numFalls > 0){
+  numFalls = 0
+  bricksLoop: for (let i = 0; i < bricks.length; i++){
+    let brick = bricks[i]
+    // see if this brick is resting on the ground
+    if (brick.minZ === 1){
+      continue
+    }
+    // otherwise, see if we're resting on another brick
+    for (let p of bricks){
+      if(p.id === brick.id){
+        continue
+      }
+      if (brick.isRestingOn(p)){
+        continue bricksLoop
+      }
+    }
+    // it's possible to fall, so fall
+    brick.fall()
+    numFalls++
+  }
+}
 
-// now figure out what is supporting what
+// now figure out which bricks are supporting each other
 for (let i = 0; i < bricks.length-1; i++){
   let brick = bricks[i]
   for (let n of bricks){
@@ -105,39 +99,27 @@ for (let i = 0; i < bricks.length-1; i++){
   }
 }
 
-let disintegrate = 0
-for(let i = 0; i < bricks.length; i++){
-  let brick = bricks[i]
-  // if not supporting anything, safe to remove
-  if (brick.supporting.length == 0){
-    disintegrate++
-    continue
-  }
-  // if supporting other bricks, safe to remove
-  // if the other bricks have something else 
-  // providing support
-  let wouldFall = []
-  for (let dependant of brick.supporting){
-    if (dependant.supportedBy.length < 2){
-      wouldFall.push(dependant.id)
-    }
-  }
-  if (wouldFall.length == 0){
-    disintegrate++
-  }
-}
-
-console.log(`Part 1: ${disintegrate}`)
-
-let total = 0
+let part1 = 0
+let part2 = 0
 for (let i = 0; i < bricks.length; i++){
   let brick = bricks[i]
-  let b = bricks.slice().filter(b => b.id != brick.id)
-  let f = falling(b)
-  total += f.size
-  if(f.size > 0){
-    console.log(`disintegrating brick ${brick.id} causes ${f.size} other bricks to fall`)
+  let falling = new Set([ brick.id ])
+  let queue = brick.supporting
+  while (queue.length > 0){
+    let b = queue.shift()
+    if(b.supportedBy.every(x => falling.has(x.id))){
+      falling.add(b.id)
+      let queueIDs = queue.map(x => x.id)
+      queue.push(...b.supporting.filter(x => !queueIDs.includes(x.id)))
+    }
   }
+
+  let n = falling.size - 1
+  if (n == 0){
+    part1++
+  }
+  part2 += n
 }
 
-console.log('Part 2:', total)
+console.log('Part 1:', part1)
+console.log('Part 2:', part2)

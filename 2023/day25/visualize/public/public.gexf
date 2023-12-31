@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf version="1.2" xmlns="http://www.gexf.net/1.2draft" xmlns:viz="http:///www.gexf.net/1.1draft/viz">
+  <meta/>
+  <graph defaultedgetype="directed">
+    <nodes>
+      <node id="A">
+        <viz:size value="1"/>
+        <viz:position x="0" y="0"/>
+      </node>
+      <node id="B">
+        <viz:size value="1"/>
+        <viz:position x="0" y="0"/>
+      </node>
+      <node id="C">
+        <viz:size value="1"/>
+        <viz:position x="0" y="0"/>
+      </node>
+      <node id="D">
+        <viz:size value="1"/>
+        <viz:position x="0" y="0"/>
+      </node>
+      <node id="E">
+        <viz:size value="1"/>
+        <viz:position x="0" y="0"/>
+      </node>
+      <node id="F">
+        <viz:size value="1"/>
+        <viz:position x="0" y="0"/>
+      </node>
+    </nodes>
+    <edges>
+      <edge id="geid_65_0" source="A" target="B"/>
+      <edge id="geid_65_1" source="B" target="C"/>
+      <edge id="geid_65_2" source="B" target="D"/>
+      <edge id="geid_65_3" source="E" target="D"/>
+      <edge id="geid_65_4" source="D" target="F"/>
+    </edges>
+  </graph>
+</gexf>
