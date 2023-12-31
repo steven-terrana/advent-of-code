@@ -1,5 +1,4 @@
 import fs from 'fs'
-import _ from 'lodash'
 import regression from 'regression'
 
 function parse(input = undefined){
@@ -26,17 +25,18 @@ function parse(input = undefined){
 // a queue that does not
 // allow for duplicated elements
 class Queue{
-  items = []
+  items = new Set()
   length = 0
   push(...args){
     for (let a of args){
-      this.items.push(JSON.stringify(a))
+      this.items.add(JSON.stringify(a))
     }
-    this.items = Array.from(new Set(this.items))
-    this.length = this.items.length
+    this.length = this.items.size
   }
   shift(){
-    let item = this.items.shift()
+    let item = this.items.values().next().value
+    this.items.delete(item)
+    this.length = this.items.size
     return JSON.parse(item)
   }
 }
@@ -47,23 +47,28 @@ class Garden{
     this.map = map
     this.starting_position = starting_position
     this.locsAtN = new Set()
+    this.visited = new Set()
+  }
+
+  get(x,y){
+    let R = this.map.length
+    let C = this.map[0].length
+    let _x = x >= 0 ? (x % R) : (x % R + R) % R
+    let _y = y >= 0 ? (y % C) : (y % C + C) % C
+    return this.map[_x][_y]
   }
 
   // finds the next available steps based on
   nextSteps(loc, n){
     let directions = [ [0, 1], [0, -1], [1, 0], [-1, 0] ]
-    let R = this.map.length
-    let C = this.map[0].length
     let nextSteps = []
     for (let d of directions){
       let dx, dy
       [dx,dy] = d
       let x2 = loc.x + dx
-      let _x2 = x2 >= 0 ? (x2 % R) : (x2 % R + R) % R
       let y2 = loc.y + dy
-      let _y2 = y2 >= 0 ? (y2 % C) : (y2 % C + C) % C
       // no walking into rocks
-      if (this.map[_x2][_y2] === Garden.rock){
+      if (this.get(x2,y2) === Garden.rock){
         continue
       }
       // if we have already determined we can end here
@@ -102,75 +107,29 @@ class Garden{
     while (queue.length > 0){
       let curLoc = queue.shift()
       if (canEndHere(curLoc.n)){
-        garden.locsAtN.add(JSON.stringify([curLoc.x, curLoc.y]))
+        this.locsAtN.add(JSON.stringify([curLoc.x, curLoc.y]))
       }
       let next = this.nextSteps(curLoc, n)
       queue.push(...next)
     }
 
-    let result = this.locsAtN.size
-
-    console.log('result (', n, '): ', result)
+    let total = this.locsAtN.size
     this.locsAtN = new Set()
-
-    return result
-  }
-
-  reset(){
-    this.locsAtN = new Set()
+    return total
   }
 }
 
-
-/*
-             | 65| 131 | 131|
-F---------------------------7      
-|                           |
-|    F-----------------7    |
-|    |                 |    |
-|    |    F-------7    |    |
-|    |    |       |    |    |
-|    |    |  [x]  |    |    |
-|    |    |       |    |    |
-|    |    L-------J    |    |
-|    |                 |    |
-|    L-----------------J    |
-|                           |
-F---------------------------7
-*/
-
 let garden = parse()
-let p = performance.now()
-// [65, 327, 589
-
-let x = [ 65, 65 + 131, 65 + 131*2]
-let f = x.map( steps => garden.walk(steps) )
-let fit = regression.polynomial(_.zip(x,f), { order: 2 })
-console.log('fit: ', fit.equation, 'r2: ', fit.r2)
-let t = (26501365 - 65) / 131
-console.log(`predict (${t}): `, fit.predict(t))
-console.log(performance.now() - p, ' ms')
 
 
-/*
-f(x) = ax^2 + bx + c
-f(0) = c
-f(1) = a + b + f(0)
-a = b + f(0) - f(1)
-f(2) = 4a + 2b + f(0)
-f(2) = 4 * (b + f(0) - f(1)) + 2b + f(0)
-f(2) = 4b + 4 * f(0) - 4 * f(1) + 2b + f(0)
-f(2) = 5 * f(0)  - 4 * f(1) + 6b
-1/6 * (f(2) - 5f(0) + 4f(1)) = b
+let steps = (N) => 65 + N * 131
+let points = []
+Array.from([1, 2, 3]).forEach( N => {
+  points.push([N, garden.walk(steps(N))])
+})
 
-a = f(0) - f(1) + 1/6 * (f(2) - 5f(0) + 4f(1))
-b = 1/6 * (f(2) - 5f(0) + 4f(1))
-c = f(0)
-*/
 
-let c = f[0]
-let b = 1/6 * (f[2] - 5 * c + 4 * f[1])
-let a = c + b - f[1]
+let model = regression.polynomial(points, {order: 2})
 
-console.log(`${a}x^2 + ${b}x + ${c}`)
-console.log(a * t**2 + b * t + c)
+let N = (26501365 - 65) / 131
+console.log('Part 2:', model.predict(N)[1])

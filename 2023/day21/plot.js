@@ -48,59 +48,53 @@ function parse(input = undefined){
   }
 }
 
-function plotHeatMap(title, ...gardens){
+function plotHeatMap(garden){
   let minX, maxX, minY, maxY
-  for(let g of gardens){
-    let x,y
-    [x,y]= _.unzip(Array.from(g.locsAtN).map( n => JSON.parse(n)))
-    minX = x.reduce( (min, x) => x < min ? x : min, minX ?? Infinity)
-    maxX = x.reduce( (max, x) => x > max ? x : max, maxX ?? -Infinity)
-    minY = y.reduce( (min, y) => y < min ? y : min, minY ?? Infinity)
-    maxY = y.reduce( (max, y) => y > max ? y : max, maxY ?? -Infinity)
-  }
-
+  let x,y
+  [x,y]= _.unzip(Array.from(garden.locsAtN).map( n => JSON.parse(n)))
+  minX = x.reduce( (min, x) => x < min ? x : min, minX ?? Infinity)
+  maxX = x.reduce( (max, x) => x > max ? x : max, maxX ?? -Infinity)
+  minY = y.reduce( (min, y) => y < min ? y : min, minY ?? Infinity)
+  maxY = y.reduce( (max, y) => y > max ? y : max, maxY ?? -Infinity)
+ 
   let rows = maxX - minX
   let cols = maxY - minY
 
   let grid = []
-  let total = 0
   for(let i = 0; i <= rows; i++){
     let row = []
     for (let j = 0; j <= cols; j++){
       let x = i + minX
       let y = j + minY
       row.push(0)
-      if (gardens[0].get(x,y) === Garden.rock){
+      if (garden.get(x,y) === Garden.rock){
         row[row.length-1]++
       }
-      for (let g of gardens){
-        if (g.locsAtN.has(JSON.stringify([x,y]))){
-          row[row.length-1] += 2
-          total++
-        }
+      if (garden.locsAtN.has(JSON.stringify([x,y]))){
+        row[row.length-1] += 2
       }
     }
     grid.push(row)
   }
   
-  var layout = {
-    title: title,
-    autosize: false,
-    width: 1000,
-    height: 1000,
-  }
+  // var layout = {
+  //   title: title,
+  //   autosize: false,
+  //   width: 1000,
+  //   height: 1000,
+  // }
 
-  let body = document.querySelector('body')
-  let plot = document.createElement('div')
-  let id = crypto.randomUUID()
-  plot.setAttribute('id', id)
-  body.appendChild(plot)
-  Plotly.newPlot(id, [{ type: 'heatmap', z: grid }], layout)
+  // let body = document.querySelector('body')
+  // let plot = document.createElement('div')
+  // let id = crypto.randomUUID()
+  // plot.setAttribute('id', id)
+  // body.appendChild(plot)
+  // Plotly.newPlot(id, [{ type: 'heatmap', z: grid }], layout)
 
-  return total
+  return { type: 'heatmap', z: grid }
 }
 
-function walkAndPlot({input, steps, offset, title, manhattan}){
+function walk({input, steps, offset, title, manhattan, endOnEven}){
   g = parse(input)
   g.starting_position = [
     g.starting_position[0] + offset[0],
@@ -108,12 +102,11 @@ function walkAndPlot({input, steps, offset, title, manhattan}){
   ]
   let total
   if (manhattan) {
-    total = g.walkManhattan(steps) 
+    total = g.walkManhattan(steps, endOnEven)
   } else { 
     total = g.walk(steps)
   }
-  plotHeatMap(title, g)
-  return total
+  return {total: total, heatMap: plotHeatMap(g) }
 }
 
 /*
@@ -185,50 +178,68 @@ so 2(N+1)^2 - (2N + 1)
 */
 function main(input){
 
-  let A = walkAndPlot({
+  let body = document.querySelector('body')
+
+  let data = []
+  let AME = walk({
     title: 'A Diamond',
     input: input,
     offset: [0,0],
     steps: 65,
-    manhattan: false
+    manhattan: true,
+    endOnEven: 0
   })
-  console.log('A no manhattan', A)
+  data.push(AME.heatMap)
+  let A_even = AME.total -1
 
-
-  let x = walkAndPlot({
-    title: 'A Diamond - Manhattan',
+  let AMO = walk({
+    title: 'A Diamond',
     input: input,
     offset: [0,0],
-    steps: 65, 
-    manhattan: true
+    steps: 65,
+    manhattan: true,
+    endOnEven: 1
   })
-  console.log('A manhattan', x)
+  data.push(AMO.heatMap)
+  let A_odd = AMO.total - 1
 
-  let y = walkAndPlot({
+  let BME = walk({
     title: 'B Diamond',
     input: input,
     offset: [65,65],
     steps: 65, 
-    manhattan: false
+    manhattan: true,
+    endOnEven: 0
   })
-  console.log('B no manhattan', y)
+  data.push(BME.heatMap)
+  let B_even = BME.total -1
 
-  let B = walkAndPlot({
-    title: 'B Diamond - Manhattan',
+  let BMO = walk({
+    title: 'B Diamond',
     input: input,
     offset: [65,65],
     steps: 65, 
-    manhattan: true
+    manhattan: true,
+    endOnEven: 1
   })
-  console.log('B manhattan', B)
+  data.push(BMO.heatMap)
+  let B_odd = BMO.total -1
 
+  for (let i = 0; i < data.length; i++){
+    let plot = document.createElement('div')
+    let id = crypto.randomUUID()
+    plot.setAttribute('id', id)
+    body.appendChild(plot)
+    console.log(data[i])
+    console.log(id)
+    Plotly.newPlot(id, [ data[i] ], { autosize: false, width: 1000, height: 1000 })
+  }
 
-  console.log('A:', A, 'B:', B)
+  console.log(A_even, A_odd, B_even, B_odd)
 
-  // // let steps = 26501365
   let steps = (N) => 65 + N * 131
   Array.from([0, 1, 2, 3]).forEach( N => {
-    let actual = walkAndPlot({
+    let actual = walk({
       title: `Actually Walked - N = ${N}`,
       input: input,
       steps: steps(N),
@@ -242,9 +253,15 @@ function main(input){
     }
     console.log({
       N: N,
-      actual: actual,
-      calculated: calculated(N,A,B)
+      actual: actual.total,
+      calculated_even: calculated(N,A_even,B_even),
+      calculated_odd: calculated(N,A_odd,B_odd)
     })
+    let plot = document.createElement('div')
+    let id = crypto.randomUUID()
+    plot.setAttribute('id', id)
+    body.appendChild(plot)
+    Plotly.newPlot(id, [ actual.heatMap ], { autosize: false, width: 1000, height: 1000 })
   })
 }
 
@@ -346,7 +363,7 @@ class Garden{
     return Math.abs(loc.x - this.starting_position[0]) + Math.abs(loc.y - this.starting_position[1])
   }
 
-  nextStepsManhattan(loc, n){
+  nextStepsManhattan(loc, n, endOnEven){
     let directions = [ 
       [-1,-1], [-1, 0], [-1, 1], 
       [ 0,-1],          [0,  1], 
@@ -374,7 +391,7 @@ class Garden{
       }
       // make sure we're staying within the max steps
       let m = this.manhattan(neighbor)
-      if (m > n || m % 2 != 0){
+      if (m > n || m % 2 != endOnEven){
         continue
       }
       nextSteps.push(neighbor)
@@ -382,7 +399,7 @@ class Garden{
     return nextSteps
   }
 
-  walkManhattan(n){
+  walkManhattan(n, endOnEven){
     let queue = new Queue()
     
     queue.push({
@@ -397,23 +414,26 @@ class Garden{
       spot with an even number of steps remaining
     */
     const canEndHere = (loc) => {
+      if (this.manhattan(loc) == 0){
+        if (endOnEven == 0){
+          return true
+        } else {
+          return false
+        }
+      }
       return this.get(loc.x,loc.y) !== Garden.rock
     }
     while (queue.length > 0){
       let curLoc = queue.shift()
       this.visited.add(JSON.stringify(curLoc))
-      if (canEndHere(curLoc)){
+      if (canEndHere(curLoc,endOnEven)){
         this.locsAtN.add(JSON.stringify([curLoc.x, curLoc.y]))
       }
-      let next = this.nextStepsManhattan(curLoc, n)
+      let next = this.nextStepsManhattan(curLoc, n, endOnEven)
       queue.push(...next)
     }
 
     return this.locsAtN.size
-  }
-
-  reset(){
-    this.locsAtN = new Set()
   }
 
 }
