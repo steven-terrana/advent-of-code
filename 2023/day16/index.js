@@ -2,6 +2,11 @@ import fs from 'fs'
 import _ from 'lodash'
 import chalk from 'chalk'
 
+/*
+  there are essentially 4 different euclidean vectors
+  we can conceptualize as "rays" of light that will bounce
+  off mirrors. 
+*/
 const RAYS = {
   up: {
     dir: [-1,0], 
@@ -216,7 +221,7 @@ console.log('Part 1:', energy)
 
 let maxEnergy = Number.NEGATIVE_INFINITY
 
-// // try everything along the top
+// try everything along the top
 for(let i = 0; i < mirrors.cols; i++){
   let energy = mirrors.shootBeam({
     src: [-1,i],
@@ -226,7 +231,7 @@ for(let i = 0; i < mirrors.cols; i++){
   maxEnergy = Math.max(maxEnergy, energy)
 }
 
-// // try everything along the bottom
+// try everything along the bottom
 for(let i = 0; i < mirrors.cols; i++){
   let energy = mirrors.shootBeam({
     src: [mirrors.rows+1,i],
@@ -236,7 +241,7 @@ for(let i = 0; i < mirrors.cols; i++){
   maxEnergy = Math.max(maxEnergy, energy)
 }
 
-// // try everything along the left
+// try everything along the left
 for(let i = 0; i < mirrors.rows; i++){
   let energy = mirrors.shootBeam({
     src: [i, -1],
@@ -246,7 +251,7 @@ for(let i = 0; i < mirrors.rows; i++){
   maxEnergy = Math.max(maxEnergy, energy)
 }
 
-// // try everything all the right
+// try everything all the right
 for(let i = 0; i < mirrors.rows; i++){
   let energy = mirrors.shootBeam({
     src: [mirrors.cols + 1, -1],

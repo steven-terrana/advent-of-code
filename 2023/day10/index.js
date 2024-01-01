@@ -1,43 +1,46 @@
 import fs from 'fs'
 import Graph from 'graphology'
 import gexf from 'graphology-gexf'
-import {allSimplePaths, allSimpleEdgePaths} from 'graphology-simple-path'
-import * as turf from '@turf/turf'
-import chalk from 'chalk'
+import {allSimplePaths} from 'graphology-simple-path'
 
 const animal = 'S'
 
 /*
-  capture directions we can head from our current location.
-  for each direction, 
-  * rowShift and colShift explain how to get the neighbor
-  * possibleNextPipes is a list of acceptable pipes we can move to
+capture directions we can head from our current location.
+for each direction, 
+* rowShift and colShift explain how to get the neighbor
+* possibleNextPipes is a list of acceptable pipes we can move to
 */
 const directions = {
-    north: {
-      rowShift: -1,
-      colShift: 0,
-      possibleNextPipes: ['|', 'F', '7', animal ]
-    },
-    south: {
-      rowShift: 1, 
-      colShift: 0,
-      possibleNextPipes: ['|', 'L', 'J', animal ]
-    },
-    east: {
-      rowShift: 0, 
-      colShift: 1,
-      possibleNextPipes: ['-', '7', 'J', animal]
-    },
-    west: {
-      rowShift: 0,
-      colShift: -1,
-      possibleNextPipes: ['-', 'L', 'F', animal]
-    }
+  north: {
+    rowShift: -1,
+    colShift: 0,
+    possibleNextPipes: ['|', 'F', '7', animal ]
+  },
+  south: {
+    rowShift: 1, 
+    colShift: 0,
+    possibleNextPipes: ['|', 'L', 'J', animal ]
+  },
+  east: {
+    rowShift: 0, 
+    colShift: 1,
+    possibleNextPipes: ['-', '7', 'J', animal]
+  },
+  west: {
+    rowShift: 0,
+    colShift: -1,
+    possibleNextPipes: ['-', 'L', 'F', animal]
+  }
 }
 
 
-// for each pipe type, capture the directions the animal can move. 
+/*
+for each pipe type, capture the directions the animal can move. 
+F-7
+| |
+L-J
+*/
 const pipes = {
   '|': [ directions.north, directions.south ],
   '-': [ directions.east,  directions.west  ], 
@@ -68,7 +71,7 @@ function addEdges(graph, node, field){
     }
     let nextPipe = field[r][c]
     if (d.possibleNextPipes.includes(nextPipe)){
-      let n = graph.mergeNode(`(${c},${r})`, {
+      let n = graph.mergeNode(`(${r},${c})`, {
         r: r, 
         c: c, 
         pipe: nextPipe
@@ -87,7 +90,7 @@ function createGraph(field){
   let pipeOptions = Object.keys(pipes)
   field.forEach( (row, r) => {
     row.forEach( (pipe, c) => {
-      let node = graph.mergeNode(`(${c},${r})`, {
+      let node = graph.mergeNode(`(${r},${c})`, {
         r: r,
         c: c, 
         pipe: pipe
@@ -101,19 +104,30 @@ function createGraph(field){
 }
 
 // export the field graph into GEXF format for visualizing
-function exportGraph(graph, edges, pointsWithin, file){
-  
+function exportGraph(graph, polygon, vertices, edges, pointsWithin, file){
+  let points = pointsWithin.map(p => `(${p.toString()})`)
+  let poly = polygon.map(p => `(${p.toString()})`)
+  let vert = vertices.map(p => `(${p.toString()})`)
   let graphString = gexf.write(graph, {
     formatNode: (key, attributes) => {
       let color 
       let size = 2
-      if (attributes.pipe == animal){
-        color = '#FF0000'
-        size = 4
-      }
-      if (pointsWithin.includes(key)){
+      // if (attributes.pipe == animal){
+      //   color = '#FF0000'
+      //   size = 4
+      // } else 
+      if (points.includes(key)){
         color = '#ED6804'
         size = 4
+      } else if (!vert.includes(key)){
+        color = '#930063'
+        size = 0
+      } else if (poly.includes(key)){
+        color = '#FFA500'
+        size = 6
+      } else {
+        color = '#F5f5f5'
+        size = 2
       }
       return {
         label: key,
@@ -130,7 +144,9 @@ function exportGraph(graph, edges, pointsWithin, file){
       let thickness = 5
       if (edges.includes(key)){
         color = "#930063"
-        thickness = 20
+        thickness = 30
+      } else {
+        color = '#FFFFFF'
       }
       return {
         viz: {
@@ -140,16 +156,19 @@ function exportGraph(graph, edges, pointsWithin, file){
       }
     }
   })
-
+  
   fs.writeFileSync(file, graphString)
 }
 
-function findAnimalNode(){
+function findAnimalNode(graph){
   return graph.findNode( node => graph.getNodeAttribute(node, 'pipe') == animal)
 }
 
 // parse the field into an undirected graph
-const field = parseField('test.txt')
+let file
+[file] = process.argv.slice(2)
+file = file ?? 'test.txt'
+const field = parseField(file)
 let graph = createGraph(field)
 
 // find the animal in that graph
@@ -160,52 +179,36 @@ let animalNode = findAnimalNode(graph)
 // path in reverse order. The furthest you can get away from the start is 
 // the length of the cycle divided by two.
 let path = allSimplePaths(graph, animalNode, animalNode).find(p => p.length > 4)
-console.log('Part 1: ', Math.floor(path.length/2))
+console.log('Part 1:', Math.floor(path.length/2))
 
-
-let neighbors = graph.neighbors(animalNode)
-console.log([graph.getNodeAttributes(animalNode), ...neighbors.map( n => graph.getNodeAttributes(n))])
-
-
-let path = allSimplePaths(graph, animalNode, animalNode).filter(p => p.length > 4)
-let polygon = path[0].map( node => {
+// this path being a closed loop represents the boundary points
+// of a lattice polygon. The path includes the start node twice, so drop it
+let polygon = path.map( node => {
   let a = graph.getNodeAttributes(node)
   return [a.r, a.c]
 })
+polygon.shift() 
 
-function pointsInPolygon(field, polygon){
-  let pointsWithin = []
-  for(let r = 0; r < field.length; r++){
-    let r_coords = polygon.filter( p => p[0]==r).sort()
-    let r_chars = r_coords.map( c => field[c[0]][c[1]])
-    let segments = []
-    let segmentStarted = false
-    r_chars.forEach( (c, idx) => {
-      if (c == '|'){
-        segments.push(r_coords[idx])
-      }
-      if (['L', 'F'].includes(c)){
-        segmentStarted = true
-        segments.push([r_coords[idx]])
-      }
-      if(segmentStarted && ['J', '7'].includes(c)){
-        segmentStarted = false
-        segments[segments.length-1].push(r_coords[idx])
-      }
-    })
-    // console.log(segments)
-    if (segments.length == 0){
-      continue
-    }
-    /*
-      . . A----B + + C . . D + + E--F . . .
-    */
-    console.log(segments )
+// given this path also represents a clockwise list, each boundary point
+// can be considered a vertice of the polygon and the Shoelace theorem can 
+// be used to calculate the area of the polygon.
+function area(polygon) {
+  let a = 0;
+  const n = polygon.length;
+  for (let i = 0; i < n; i++) {
+      let j = (i + 1) % n;
+      a += polygon[i][0] * polygon[j][1] - polygon[j][0] * polygon[i][1]
   }
+  return Math.abs(a) / 2;
 }
 
-pointsInPolygon(field, polygon)
-
-// let's get a pretty picture that shows the entire field, highlights the cycle,
-// and shows which nodes are encapsulated by it.
-// exportGraph(graph, edges[0], pointsWithin, 'visualize/public/graph.gexf')
+// Pick's theorem states that for a lattice polygon:
+// A = I + B/2 - 1 
+// where:
+// A - polygon area
+// B - # of boundary points
+// I - # of interior points
+// therefore:
+// I = A - B/2 + 1
+let I = area(polygon) - polygon.length*0.5 + 1
+console.log('Part 2:', I)

@@ -3,7 +3,6 @@ import chalk from 'chalk'
 import { PriorityQueue} from '@datastructures-js/priority-queue'
 import _ from 'lodash'
 
-
 // get some parsing out of the way
 let file
 [file] = process.argv.slice(2)

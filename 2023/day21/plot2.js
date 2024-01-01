@@ -178,9 +178,6 @@ so 2(N+1)^2 - (2N + 1)
 */
 function main(input){
 
-  let garden = parse(input)
-  console.log(garden.countRocks())
-
   let body = document.querySelector('body')
 
   let data = []
@@ -193,7 +190,8 @@ function main(input){
     endOnEven: 0
   })
   data.push(AME.heatMap)
- 
+  let A_even = AME.total -1
+
   let AMO = walk({
     title: 'A Diamond',
     input: input,
@@ -203,7 +201,8 @@ function main(input){
     endOnEven: 1
   })
   data.push(AMO.heatMap)
- 
+  let A_odd = AMO.total - 1
+
   let BME = walk({
     title: 'B Diamond',
     input: input,
@@ -213,7 +212,8 @@ function main(input){
     endOnEven: 0
   })
   data.push(BME.heatMap)
- 
+  let B_even = BME.total -1
+
   let BMO = walk({
     title: 'B Diamond',
     input: input,
@@ -223,14 +223,19 @@ function main(input){
     endOnEven: 1
   })
   data.push(BMO.heatMap)
- 
+  let B_odd = BMO.total -1
+
   for (let i = 0; i < data.length; i++){
     let plot = document.createElement('div')
     let id = crypto.randomUUID()
     plot.setAttribute('id', id)
     body.appendChild(plot)
+    console.log(data[i])
+    console.log(id)
     Plotly.newPlot(id, [ data[i] ], { autosize: false, width: 1000, height: 1000 })
   }
+
+  console.log(A_even, A_odd, B_even, B_odd)
 
   let steps = (N) => 65 + N * 131
   Array.from([0, 1, 2, 3]).forEach( N => {
@@ -241,7 +246,17 @@ function main(input){
       offset: [0,0],
       manhattan: false
     })
-    console.log({N: N, total: actual.total})
+    let calculated = (N, A, B) => {
+      let a_part = (2 * Math.pow(N,2) + 2 * N + 1) * A
+      let b_part = (4 * Math.pow(N,2) + 2 * N) * B
+      return a_part + b_part
+    }
+    console.log({
+      N: N,
+      actual: actual.total,
+      calculated_even: calculated(N,A_even,B_even),
+      calculated_odd: calculated(N,A_odd,B_odd)
+    })
     let plot = document.createElement('div')
     let id = crypto.randomUUID()
     plot.setAttribute('id', id)
@@ -376,7 +391,7 @@ class Garden{
       }
       // make sure we're staying within the max steps
       let m = this.manhattan(neighbor)
-      if (m > n){
+      if (m > n || m % 2 != endOnEven){
         continue
       }
       nextSteps.push(neighbor)
@@ -421,31 +436,40 @@ class Garden{
     return this.locsAtN.size
   }
 
-  countRocks(){
-    let AE = 0
-    let AO = 0
-    let BE = 0
-    let BO = 0
-    for (let x = 0; x < this.map.length; x++){
-      for(let y = 0; y < this.map[0].length; y++){
-        if(this.get(x,y) == Garden.rock){
-          let m = this.manhattan({x:x, y:y})
-          if (m > 65){
-            if (m % 2 == 0){
-              BE++
-            } else {
-              BO++
-            }
-          } else {
-            if (m % 2 == 0){
-              AE++
-            } else {
-              AO++
-            }
-          }
+  walkManhattanCountRocks(n, endOnEven){
+    let queue = new Queue()
+    
+    queue.push({
+      x: this.starting_position[0],
+      y: this.starting_position[1],
+      n: true
+    })
+
+    /*
+      to reduce the search space, we know we'll eventually
+      be able to stop on a given spot if we reach the 
+      spot with an even number of steps remaining
+    */
+    const canEndHere = (loc) => {
+      if (this.manhattan(loc) == 0){
+        if (endOnEven == 0){
+          return true
+        } else {
+          return false
         }
       }
+      return this.get(loc.x,loc.y) == Garden.rock
     }
-    return [AE,AO,BE,BO]
+    while (queue.length > 0){
+      let curLoc = queue.shift()
+      this.visited.add(JSON.stringify(curLoc))
+      if (canEndHere(curLoc,endOnEven)){
+        this.locsAtN.add(JSON.stringify([curLoc.x, curLoc.y]))
+      }
+      let next = this.nextStepsManhattan(curLoc, n, endOnEven)
+      queue.push(...next)
+    }
+
+    return this.locsAtN.size
   }
 }

@@ -1,5 +1,4 @@
 import fs from 'fs'
-import chalk from 'chalk'
 import _ from 'lodash'
 
 class Pattern {
@@ -115,10 +114,7 @@ class Pattern {
   }
 }
 
-
 let patterns = Pattern.parseAll('input.txt')
-
-
 
 let sum = 0
 for(let p of patterns){
