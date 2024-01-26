@@ -1,0 +1,14 @@
+{
+  "name": "15",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "z3-solver": "^4.12.4"
+  }
+}

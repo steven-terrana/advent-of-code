@@ -1,0 +1,16 @@
+{
+  "name": "22",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "^3.2.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "@datastructures-js/priority-queue": "^4.2.0",
+    "mathjs": "^12.3.0"
+  }
+}
