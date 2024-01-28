@@ -1,15 +1,21 @@
 import { test, expect } from "bun:test";
 import { findSteps } from ".";
 
-test("Data from square 1 is carried 0 steps, since its at the access port.", () => {
-  expect(findSteps(1)).toBe(0);
-});
-test("Data from square 12 is carried 3 steps, such as: down, left, left.", () => {
-  expect(findSteps(12)).toBe(3);
-});
-test("Data from square 23 is carried only 2 steps: up twice.", () => {
-  expect(findSteps(23)).toBe(2);
-});
-test("Data from square 1024 must be carried 31 steps.", () => {
-  expect(findSteps(1024)).toBe(31);
+const cases = [
+  [1, 0],
+  [2, 1],
+  [3, 2],
+  [2, 1],
+  [5, 2],
+  [6, 1],
+  [7, 2],
+  [8, 1],
+  [9, 2],
+  [12, 3],
+  [23, 2],
+  [1024, 31],
+];
+
+test.each(cases)("%p -> %p", (a, b) => {
+  expect(findSteps(a)).toBe(b);
 });
