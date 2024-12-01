@@ -10,52 +10,30 @@ class Memory extends Map<string, number> {
   }
 }
 
+let memory = new Memory();
 let queue: number[] = [];
 let isDeadlocked = false;
-let isCompleted = false;
-let memory = new Memory();
 let instructions: string[];
 let lastCommand = performance.now();
 
 self.onmessage = async (event: MessageEvent) => {
   if (event.data?.event == "send") {
     queue.push(event.data?.frequency);
-    // console.log(
-    //   `worker ${self.Bun.env.id} received event: ${event.data.event} | adding to queue: ${queue}`
-    // );
     if (isDeadlocked) {
-      // console.log(
-      //   `worker ${self.Bun.env.id} received event: ${event.data.event} | resuming execution`
-      // );
       isDeadlocked = false;
       execute();
     }
   } else if (event.data?.event == "set") {
-    // console.log(
-    //   `worker ${self.Bun.env.id} received event: ${event.data.event} | setting register ${event.data.register} to ${event.data.value}`
-    // );
     memory.set(event.data.register, event.data.value);
   } else if (event.data?.event == "execute") {
-    // console.log(
-    //   `worker ${self.Bun.env.id} received event: ${event.data.event} | beginning program`
-    // );
     instructions = event.data.instructions;
     execute();
-  } else if (event.data == "print") {
-    // console.log(
-    //   `worker ${
-    //     self.Bun.env.id
-    //   }: isCompleted: ${isCompleted}, isDeadlocked: ${isDeadlocked}, queue: ${queue}, memory: ${Array.from(
-    //     memory.entries()
-    //   )}`
-    // );
   }
 };
 
 setInterval(() => {
   let time = performance.now();
   if (time - lastCommand > 2000) {
-    console.log(`no change for Worker ${self.Bun.env.id}`);
     self.postMessage({
       event: "done",
     });
@@ -65,13 +43,11 @@ setInterval(() => {
 
 let i = 0;
 function execute() {
-  // console.log("program: ", i, instructions.length);
   for (; i < instructions.length; i++) {
     let command: string;
     let x: string;
     let y: string | number;
     [command, x, y] = instructions[i].split(" ");
-    // console.log(`Worker ${self.Bun.env.id} executing: ${instructions[i]}`);
     y = isNaN(parseInt(y)) ? y : parseInt(y);
     if (command == "set") set(x, y);
     if (command == "add") add(x, y);
@@ -80,42 +56,26 @@ function execute() {
     if (command == "snd") snd(x);
     if (command == "rcv") {
       if (!rcv(x)) {
-        // console.log(
-        //   `Worker ${self.Bun.env.id} is deadlocked; pausing execution`
-        // );
         return;
-        // pause... can resume calling resume()
       }
     }
     if (command == "jgz") {
       let newLine = jgz(x, y);
       i = i + newLine - 1;
     }
-
     lastCommand = performance.now();
   }
-  // console.log(`Worker ${self.Bun.env.id} finished program execution`);
 }
 
 // rcv X recovers the frequency of the last sound played, but only when the value of X is not zero. (If it is zero, the command does nothing.)
 // returns false if the program should pause because we're waiting to receive
 const rcv = (x: string): boolean => {
   if (queue.length == 0) {
-    console.log(
-      `Worker ${self.Bun.env.id} has nothing to receive - deadlocked;`
-    );
     isDeadlocked = true;
-    self.postMessage({
-      event: "deadlocked",
-    });
     return false;
   } else {
-    let frequency = queue.pop()!;
+    let frequency = queue.shift()!;
     memory.set(x, frequency);
-    console.log(
-      `Worker ${self.Bun.env.id} received | register ${x} set to ${frequency}`
-    );
-    isDeadlocked = false;
     return true;
   }
 };
@@ -126,6 +86,7 @@ const snd = (x: string | number) => {
   postMessage({
     event: "send",
     frequency: v,
+    source: self.Bun.env.id,
   });
 };
 

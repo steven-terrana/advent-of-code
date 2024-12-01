@@ -35,11 +35,12 @@ workerA.onmessage = (event: MessageEvent) => {
   }
 };
 
-let messagesSent = 0;
+let messagesSent = BigInt(0);
 workerB.onmessage = (event: MessageEvent) => {
   if (event.data?.event == "send") {
     workerA.postMessage(event.data);
     messagesSent++;
+    console.log(messagesSent);
   } else if (event.data?.event == "done") {
     console.log("Worker B sent:", messagesSent);
   }
