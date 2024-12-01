@@ -1,19 +1,12 @@
 # read input
-with open('input.txt', 'r') as file:
-    numbers = file.read().strip().split('\n')
+input = open('input.txt', 'r').read().split('\n')
 
 # parse input
-group1 = []
-group2 = []
-
-for line in numbers:
-    n = line.split()
-    group1.append(int(n[0]))
-    group2.append(int(n[1]))
+(group1, group2) = zip(*[ [int(n) for n in line.split()] for line in input])
 
 # calculate sum
 sum = 0
-for n in range(len(group1)):
-    sum = sum + group1[n] * group2.count(group1[n])
+for n in set(group1):
+    sum = sum + n * group1.count(n) * group2.count(n)
 
 print(sum)
