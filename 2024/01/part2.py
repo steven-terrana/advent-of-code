@@ -1,8 +1,8 @@
 # read input
-input = open('input.txt', 'r').read().split('\n')
+input = open("input.txt", "r").read().split("\n")
 
 # parse input
-(group1, group2) = zip(*[ [int(n) for n in line.split()] for line in input])
+(group1, group2) = zip(*[[int(n) for n in line.split()] for line in input])
 
 # calculate sum
 sum = 0

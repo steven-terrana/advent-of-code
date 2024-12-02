@@ -1,6 +1,6 @@
 # read input
-with open('input.txt', 'r') as file:
-    numbers = file.read().strip().split('\n')
+with open("input.txt", "r") as file:
+    numbers = file.read().strip().split("\n")
 
 # parse input
 group1 = []
