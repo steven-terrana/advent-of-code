@@ -11,10 +11,8 @@ def isDirectional(report):
 
 def isProximal(report):
     proximities = [abs(report[i] - report[i + 1]) for i in range(len(report) - 1)]
-    isSafe = all([1 <= p and p <= 3 for p in proximities])
-    if isSafe:
-        return True
-
+    return all([1 <= p and p <= 3 for p in proximities])
+    
 
 safe = 0
 for report in reports:
