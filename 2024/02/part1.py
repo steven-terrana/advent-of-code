@@ -1,6 +1,6 @@
 input = open('input.txt', 'r').read()
 
-reports = [ [int(n) for n in line.split()] for line in input.split('\n')]
+reports = [[int(n) for n in line.split()] for line in input.split('\n')]
 
 def isDirectional(report):
     is_ascending = all([ report[i] < report[i + 1] for i in range(len(report) - 1) ])
