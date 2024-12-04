@@ -5,57 +5,54 @@ grid = [list(line) for line in input]
 
 
 def search(grid, r, c):
-    try:
-        return any(
-            [
-                # M S
-                #  A
-                # M S
-                all(
-                    [
-                        grid[r - 1][c - 1] == "M",
-                        grid[r - 1][c + 1] == "S",
-                        grid[r + 1][c - 1] == "M",
-                        grid[r + 1][c + 1] == "S",
-                    ]
-                ),
-                # M M
-                #  A
-                # S S
-                all(
-                    [
-                        grid[r - 1][c - 1] == "M",
-                        grid[r - 1][c + 1] == "M",
-                        grid[r + 1][c - 1] == "S",
-                        grid[r + 1][c + 1] == "S",
-                    ]
-                ),
-                # S M
-                #  A
-                # S M
-                all(
-                    [
-                        grid[r - 1][c - 1] == "S",
-                        grid[r - 1][c + 1] == "M",
-                        grid[r + 1][c - 1] == "S",
-                        grid[r + 1][c + 1] == "M",
-                    ]
-                ),
-                # S S
-                #  A
-                # M M
-                all(
-                    [
-                        grid[r - 1][c - 1] == "S",
-                        grid[r - 1][c + 1] == "S",
-                        grid[r + 1][c - 1] == "M",
-                        grid[r + 1][c + 1] == "M",
-                    ]
-                ),
-            ]
-        )
-    except Exception:
-        return False
+    return any(
+        [
+            # M S
+            #  A
+            # M S
+            all(
+                [
+                    grid[r - 1][c - 1] == "M",
+                    grid[r - 1][c + 1] == "S",
+                    grid[r + 1][c - 1] == "M",
+                    grid[r + 1][c + 1] == "S",
+                ]
+            ),
+            # M M
+            #  A
+            # S S
+            all(
+                [
+                    grid[r - 1][c - 1] == "M",
+                    grid[r - 1][c + 1] == "M",
+                    grid[r + 1][c - 1] == "S",
+                    grid[r + 1][c + 1] == "S",
+                ]
+            ),
+            # S M
+            #  A
+            # S M
+            all(
+                [
+                    grid[r - 1][c - 1] == "S",
+                    grid[r - 1][c + 1] == "M",
+                    grid[r + 1][c - 1] == "S",
+                    grid[r + 1][c + 1] == "M",
+                ]
+            ),
+            # S S
+            #  A
+            # M M
+            all(
+                [
+                    grid[r - 1][c - 1] == "S",
+                    grid[r - 1][c + 1] == "S",
+                    grid[r + 1][c - 1] == "M",
+                    grid[r + 1][c + 1] == "M",
+                ]
+            ),
+        ]
+    )
 
 
 count = 0

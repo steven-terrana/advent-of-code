@@ -20,24 +20,21 @@ def search(grid, r, c):
 
     count = 0
     for d in directions:
-        try:
-            word = []
-            for i in range(len("XMAS")):
-                R = r + i * d[0]
-                C = c + i * d[1]
-                if R < 0:
-                    break
-                if R > len(grid) - 1:
-                    break
-                if C < 0:
-                    break
-                if C > len(grid[0]) - 1:
-                    break
-                word.append(grid[r + i * d[0]][c + i * d[1]])
-            if word == ["X", "M", "A", "S"]:
-                count += 1
-        except Exception:
-            pass
+        word = []
+        for i in range(len("XMAS")):
+            R = r + i * d[0]
+            C = c + i * d[1]
+            if R < 0:
+                break
+            if R > len(grid) - 1:
+                break
+            if C < 0:
+                break
+            if C > len(grid[0]) - 1:
+                break
+            word.append(grid[r + i * d[0]][c + i * d[1]])
+        if word == ["X", "M", "A", "S"]:
+            count += 1
     return count
 
 
