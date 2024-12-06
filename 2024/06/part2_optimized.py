@@ -50,7 +50,12 @@ def stroll(map, g_r, g_c):
             visited.add(state)
 
 
+# optimization:
+#   run an initial stroll to get the path
+#   any obstacle introduced must be on this trajectory
+#   if it's going to impact it.
 (_, path) = stroll(map, g_r, g_c)
+
 # exclude initial position and disregard direction
 potential = set([(p[1], p[2]) for p in list(path)[1:]])
 
