@@ -1,6 +1,7 @@
 with open("input.txt", "r") as file:
     map = [list(line) for line in file.read().split("\n")]
 
+# get starting position of the guard
 g_r = None
 g_c = None
 for r, row in enumerate(map):
@@ -9,15 +10,18 @@ for r, row in enumerate(map):
         g_c = row.index("^")
         break
 
-# remember starting position
-i_r = g_r
-i_c = g_c
-
+# cardinal directional vectors sequenced clockwise
 directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
 
 def stroll(map, g_r, g_c):
+    """
+    walk until the guard exits the map (returns False) or until
+    we've been to this exact place heading this exact direction
+    before - indicating we're in a loop.
+    """
     turns = 0
+    # state tuple now includes direction in addition to position
     visited = set([(directions[0], g_r, g_c)])
     while True:
         next_r = g_r + directions[turns % 4][0]
