@@ -33,7 +33,7 @@ def stroll(map, g_r, g_c):
         next_c = g_c + directions[turns % 4][1]
         if not (0 <= next_r < len(map) and 0 <= next_c < len(map[0])):
             # exited without revisiting a state
-            return False
+            return (False, visited)
 
         obstructed = map[next_r][next_c] == "#"
         if obstructed:
@@ -45,23 +45,27 @@ def stroll(map, g_r, g_c):
         state = (directions[turns % 4], g_r, g_c)
         if state in visited:
             # revisited a state
-            return True
+            return (True, visited)
         else:
             visited.add(state)
 
 
+(_, path) = stroll(map, g_r, g_c)
+# exclude initial position and disregard direction
+potential = set([(p[1], p[2]) for p in list(path)[1:]])
+
 count = 0
 checking = 0
-for r in range(len(map)):
-    for c in range(len(map[0])):
-        if map[r][c] == ".":
-            map[r][c] = "#"
-            checking += 1
-            if stroll(map, g_r, g_c):
-                count += 1
-            map[r][c] = "."
+for point in potential:
+    (r, c) = point
+    map[r][c] = "#"
+    checking += 1
+    if stroll(map, g_r, g_c)[0]:
+        count += 1
+    map[r][c] = "."
 
 end_time = time.time()
+
 print(count)
 print(f"checked {checking} locations")
 print(f"execution time was {end_time - start_time:.6f} seconds")
