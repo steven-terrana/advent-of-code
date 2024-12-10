@@ -45,11 +45,14 @@ class Filesystem:
             # if no empty space will work, move on
             if e_idx is None:
                 continue
-            # move the file to the new location and create a new
-            # empty space if there is room left over
+            # move the file to the new location
+            ## replace current file location with empty space
             self.inodes[f_idx] = EmptySpace(size=file.size)
-            del self.inodes[e_idx]  # remove the current empty space
+            ## remove the empty space at target location
+            del self.inodes[e_idx] 
+            ## insert the file
             self.inodes.insert(e_idx, file)
+            ## if there was room left over, add back the remaining empty space
             if space.size > file.size:
                 self.inodes.insert(e_idx + 1, EmptySpace(size=space.size - file.size))
 
