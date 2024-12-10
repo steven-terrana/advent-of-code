@@ -45,7 +45,7 @@ class Filesystem:
             # if no empty space will work, move on
             if e_idx is None:
                 continue
-            # move the file to the new location and craete a new
+            # move the file to the new location and create a new
             # empty space if there is room left over
             self.inodes[f_idx] = EmptySpace(size=file.size)
             del self.inodes[e_idx]  # remove the current empty space
