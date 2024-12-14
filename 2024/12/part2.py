@@ -1,5 +1,7 @@
 import os
 import networkx as nx
+import math
+import matplotlib.pyplot as plt
 
 with open(f"{os.path.dirname(__file__)}/input.txt", "r") as file:
     garden = [list(line.strip()) for line in file.read().split("\n")]
@@ -22,46 +24,56 @@ def area(region):
     return len(region)
 
 
-def perimeter(region):
-    """
-    for each node, the sides exposed to the outside are:
-        4 - the number of neighbors
-    the total perimeter is the sum of these exposed sides
-    """
-    return sum([4 - len(list(g.neighbors(n))) for n in list(region)])
-
-
-def perimeter_points(region):
-    """
-    conceptually our plan is to explode individual grid
-    coordinates into 4 points for the 4 corners and then
-    track the points that are part of the perimeter.
-
-    for every node, a side is a part of the perimeter
-    if it does not have a neighbor.
-    """
-    points = []
+def sides(region):
+    # "explodes" a grid coordinate into its
+    # 4 corners. based on which sides of the
+    # plot don't have neighbors, add those corner
+    # coordinates to the perimeter graph
+    p = nx.Graph()
     for r, c in region:
+        up_left = (r, c)
+        up_right = (r, c + 1)
+        down_left = (r + 1, c)
+        down_right = (r + 1, c + 1)
         # top is exposed
         if (r - 1, c) not in region:
-            points.extend([(r, c), (r, c + 1)])
+            p.add_edge(up_left, up_right)
         # bottom is exposed
         if (r + 1, c) not in region:
-            points.extend([(r + 1, c), (r + 1, c + 1)])
+            p.add_edge(down_left, down_right)
         # left is exposed
         if (r, c - 1) not in region:
-            points.extend([(r, c), (r, c + 1)])
+            p.add_edge(up_left, down_left)
         # right is exposed
         if (r, c + 1) not in region:
-            points.extend([(r, c + 1), (r + 1, c + 1)])
-    return points
+            p.add_edge(up_right, down_right)
+
+    # for this geometry, the number of side is
+    # equal to the number of columns
+    sides = 0
+    for n in p.nodes():
+        neighbors = p.neighbors(n)
+        if len(list(neighbors)) == 4:
+            sides += 2
+        else:
+            # a node is a corner if its neighbors
+            # do not share either a row or column coordinate
+            (a, b) = p.neighbors(n)
+            ar, ac = a
+            br, bc = b
+            if ar != br and ac != bc:
+                sides += 1
+
+    ## uncomment if you want to see each region perimeter plotted
+    # pos = {node: (node[1], -node[0]) for node in p.nodes()}
+    # nx.draw(p, pos, with_labels=True)
+    # plt.show()
+    return sides
 
 
-def sides(region):
-    """ """
-    print(region)
-    print(perimeter_points(region))
+total = 0
+for region in nx.connected_components(g):
+    r, c = list(region)[0]
+    total += area(region) * sides(region)
 
-
-regions = list(nx.connected_components(g))
-sides(regions[0])
+print(total)
