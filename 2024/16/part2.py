@@ -4,9 +4,9 @@ from colorama import Fore, Style
 
 
 class Node:
-    def __init__(self, path, pos, dir, score=0, heuristic=0):
+    def __init__(self, parent, pos, dir, score=0, heuristic=0):
         # parent
-        self.path = path
+        self.parents = [parent] if parent is not None else []
         # current position
         self.pos = pos
         self.dir = dir
@@ -18,12 +18,14 @@ class Node:
         self.total = score + heuristic
 
     def path(self):
-        p = [self]
-        n = self
-        while n.parent is not None:
-            p.append(n.parent)
-            n = n.parent
-        return p
+        path = set([self.pos])
+        q = [self]
+        while q:
+            n = q.pop()
+            path.add(n.pos)
+            q.extend(n.parents)
+
+        return path
 
     def __eq__(self, other):
         return self.pos == other.pos and self.dir == other.dir
@@ -79,9 +81,11 @@ class Maze:
     def heuristic(self, pos, dir):
         """go from current position to end assuming no walls in between"""
         manhattan = abs(pos[0] - self.end[0]) + abs(pos[1] - self.end[1])
-        return manhattan
+        turn = Maze.TURN_COST * self.turns(pos, dir)
+        return manhattan + turn
 
-    def print_seats(self, seats):
+    def print(self, node):
+        path = node.path()
         R = max([w[0] for w in self.walls])
         C = max([w[1] for w in self.walls])
         for r in range(R + 1):
@@ -89,8 +93,8 @@ class Maze:
             for c in range(C + 1):
                 if (r, c) in self.walls:
                     row.append(Fore.BLUE + "#" + Style.RESET_ALL)
-                elif (r, c) in seats:
-                    row.append(Fore.RED + "O" + Style.RESET_ALL)
+                elif (r, c) in path:
+                    row.append(Fore.RED + "*" + Style.RESET_ALL)
                 else:
                     row.append(Fore.LIGHTBLACK_EX + "." + Style.RESET_ALL)
             print("".join(row))
@@ -98,7 +102,7 @@ class Maze:
     def solve(self):
         queue = []
         start_node = Node(
-            [],
+            None,
             self.start,
             self.direction,
             0,
@@ -106,23 +110,20 @@ class Maze:
         )
         heappush(queue, start_node)
 
-        current_best = math.inf
-        best = []
+        # position and direction matter
+        visited = []
         while queue:
             # take a step
             n = heappop(queue)
+            visited.append(n)
             # check if goal is reached
             if n.pos == self.end:
-                if n.score < current_best:
-                    current_best = n.score
-                    best = [n]
-                elif n.score == current_best:
-                    best.append(n)
+                return n
             # if goal not reached, find valid neighbors
             r, c = n.pos
             for neighbor in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]:
                 # for each valid neighbor, add them to the queue if the
-                if neighbor in self.walls or neighbor in n.path:
+                if neighbor in self.walls:
                     continue
 
                 new_dir = (neighbor[0] - n.pos[0], neighbor[1] - n.pos[1])
@@ -130,17 +131,22 @@ class Maze:
                 if new_dir != n.dir:
                     score += Maze.TURN_COST
                 neighbor_node = Node(
-                    n.path + [n.pos],
-                    neighbor,
-                    new_dir,
-                    score,
-                    self.heuristic(neighbor, new_dir),
+                    n, neighbor, new_dir, score, self.heuristic(neighbor, new_dir)
                 )
-                # if node hasn't been visited before and if there isn't already
-                # a node in the queue with a lower score, add it to the queue
-                if neighbor_node.score <= current_best:
+
+                if neighbor_node in visited:
+                    idx = visited.index(neighbor_node)
+                    v = visited[idx]
+                    if neighbor_node.score == v.score:
+                        v.parents.append(n)
+                        continue
+
+                if neighbor_node not in visited and all(
+                    not (neighbor_node == n and neighbor_node.total < n.total)
+                    for n in queue
+                ):
                     heappush(queue, neighbor_node)
-        return best
+        raise Exception("no solution found")
 
     @staticmethod
     def parse():
@@ -162,14 +168,7 @@ class Maze:
 
 
 m = Maze.parse()
-best = m.solve()
+n = m.solve()
+m.print(n)
 
-seats = set()
-paths = [n.path for n in best]
-for path in paths:
-    for node in path:
-        seats.add(node)
-
-m.print_seats(seats)
-
-print(len(seats) + 1)
+print(len(n.path()))
