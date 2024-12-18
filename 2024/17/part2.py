@@ -84,7 +84,7 @@ def ten_to_eight(decimal_number):
         decimal_number //= 8
 
     # The digits are collected in reverse order, so reverse them
-    return octal_digits[::-1]
+    return list(reversed(octal_digits))
 
 
 def eight_to_ten(octal_digits):
