@@ -10,11 +10,15 @@ class Computer:
         self.b = b
         self.c = c
         self.program = program
+        self.reversed_program = list(reversed(program))
         self.i = 0
         self.out = []
 
-    def copy(self):
-        return Computer(self.a, self.b, self.c, self.program)
+    def reset(self, a):
+        self.a = a
+        self.b = 0
+        self.c = 0
+        self.out = []
 
     def combo(self, operand):
         if 0 <= operand <= 3:
@@ -91,24 +95,66 @@ def eight_to_ten(octal_digits):
     return decimal_value
 
 
-original = Computer.parse()
+c = Computer.parse()
 
-# i solved this with manual intervention after reverse engineering
-#  the problem by hand.... you could do it with a DFS of the this bits array
+# Step 1: reverse engineer the program manually:
 #
-# 1. convert base 10 A register value to base 8
-# 2. beginning elements of bit array impact last elements of output array
-# 3. the process was to start at 8**16 which corresponds to 1000000000000000
-#    and increment values while we matched the expected output
+# 2,4 -> b = a % 8
+# 1,1 -> b = b ^ 1
+# 7,5 -> c = a / 2^b
+# 1,5 -> b = b ^ 5
+# 4,1 -> b = b ^ c
+# 5,5 -> output b % 8
+# 0,3 -> a = a // 8
+# 3,0 -> iterate again if a is not 0
+#
+# the program runs operations and outputs 1 value every
+# iteration until a // 8 is 0, so that means the seed
+# value must be at least 8 to the power of len(program)
+# to be big enough to generate enough outputs
 
+min_a = 8 ** (len(c.program) - 1)
 
-bits = [4, 5, 2, 6, 4, 4, 4, 1, 3, 3, 2, 6, 7, 2, 7, 5]
-a = eight_to_ten(bits)
-original.a = a
-original.execute()
+# given the emphasis on 8 bits in the program instructions
+# and outputs, i tried looking at patterns when converting
+# the a register to 8 bits
 
-print(bits)
-print(list(reversed(original.program)))
-print(list(reversed(original.out)))
+bits = ten_to_eight(min_a)
 
-print(a)
+# perhaps unsurprisingly, the number of input bits matched the
+# number of output bits, so i started manually testing bit
+# values and saw that early index input bit changes changed
+# late index output bits
+#
+# so lets try a depth first search manipulating input bits
+# until they patch required output bits
+
+idx = 0
+while idx < len(c.program):
+    # try setting the input bit at index idx
+    # until we find a match - if we do, then
+    # move on to the next input bit. if we
+    # dont, then backtrack
+    bits[idx] += 1
+    if bits[idx] > 7:
+        bits[idx] = 0
+        idx -= 1
+        continue
+    a = eight_to_ten(bits)
+    c.reset(a)
+    c.execute()
+    output = list(reversed(c.out))
+    # uncomment to visualize whats happening
+    # print("-" * 32)
+    # print("  input:", bits)
+    # print(" output:", output)
+    # print("program:", c.reversed_program)
+    # print("-" * 32)
+
+    if output[idx] == c.reversed_program[idx]:
+        idx += 1
+    if c.out == c.program:
+        print(a)
+        break
+    if idx == -1:
+        print("no solution")
