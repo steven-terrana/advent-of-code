@@ -9,20 +9,22 @@ class Maze:
         self.start = start
         self.end = end
         self.grid = grid
+        self.R = len(grid)
+        self.C = len(grid[0])
 
     def neighbors(self, pos, manhattan):
         """returns a set of neighboring points within a given manhattan distance away"""
-        neighbors = set()
+        neighbors = []
         for dr in range(-manhattan, manhattan + 1):
             remaining = manhattan - abs(dr)
             for dc in range(-remaining, remaining + 1):
                 if dr == 0 and dc == 0:
                     continue
                 r, c = pos[0] + dr, pos[1] + dc
-                if 0 <= r < len(self.grid) and 0 <= c < len(self.grid[1]):
+                if 0 <= r < self.R and 0 <= c < self.C:
                     if self.grid[r][c] == "#":
                         continue
-                    neighbors.add((pos[0] + dr, pos[1] + dc))
+                    neighbors.append((pos[0] + dr, pos[1] + dc))
         return neighbors
 
     def solve(self, cheat_duration, min_savings):
@@ -40,21 +42,24 @@ class Maze:
         where two nodes indices are more than 100 spots apart
         """
         directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-        path = [self.start]
+        path = {}
+        time = 0
+        path[self.start] = time
         pos = self.start
         while pos != self.end:
             for dr, dc in directions:
                 r, c = (pos[0] + dr, pos[1] + dc)
                 if (r, c) not in path and self.grid[r][c] != "#":
                     pos = (r, c)
-                    path.append(pos)
+                    time += 1
+                    path[pos] = time
                     break
 
         total = 0
         for i, a in enumerate(path):
             for b in self.neighbors(a, cheat_duration):
                 manhattan = abs(a[0] - b[0]) + abs(a[1] - b[1])
-                time_saved = path.index(b) - i - manhattan
+                time_saved = path[b] - i - manhattan
                 if time_saved >= min_savings:
                     total += 1
 
