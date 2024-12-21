@@ -1,6 +1,5 @@
 import os
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation, FFMpegWriter
 
 
 class Vector:
@@ -90,7 +89,7 @@ for t in range(6600, 6800):
     correlation.append(spatial_autocorrelation(img))
     plt.title(f"t = {t}, s = {correlation[-1]}")
     heatmap.set_data(img)
-    plt.pause(0.01)
+    plt.pause(0.1)
 
 index = correlation.index(max(correlation))
 print(start_frame + index)

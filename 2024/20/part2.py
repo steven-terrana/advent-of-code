@@ -13,7 +13,6 @@ class Maze:
         self.C = len(grid[0])
 
     def neighbors(self, pos, manhattan):
-        """returns a set of neighboring points within a given manhattan distance away"""
         neighbors = []
         for dr in range(-manhattan, manhattan + 1):
             remaining = manhattan - abs(dr)
@@ -28,19 +27,6 @@ class Maze:
         return neighbors
 
     def solve(self, cheat_duration, min_savings):
-        """
-        without cheating the maze has a single solution that uses every point
-        in the grid. Let's represent that path as a list.
-
-        then, we can walk along the path and check for grid positions 2 away
-        that are also on the path.
-
-        Given the solution without cheating is a list, a positions
-        index in the list is also how long it takes to get there.
-
-        Since there is only one solution, we're looking for all instances
-        where two nodes indices are more than 100 spots apart
-        """
         directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         path = {}
         time = 0
