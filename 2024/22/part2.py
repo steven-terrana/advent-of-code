@@ -13,21 +13,28 @@ def evolve(secret: int) -> int:
     return secret
 
 
+# keep a global totals index
+totals = {}
+
+
 def predict(initial: int, n: int) -> list[list[int]]:
     prices = []
     diffs = []
     secret = initial
     price = secret % 10
-    sequences = {}
+    sequences = set()
     for i in range(n):
         secret = evolve(secret)
         new_price = secret % 10
         prices.append(new_price)
         diffs.append(new_price - price)
-        if i >= 3:
+        if new_price > 0 and i >= 3:
             seq = tuple(diffs[i - 3 : i + 1])
             if seq not in sequences:
-                sequences[seq] = new_price
+                sequences.add(seq)
+                if seq not in totals:
+                    totals[seq] = 0
+                totals[seq] += new_price
         price = new_price
 
     return sequences
@@ -45,24 +52,10 @@ def main():
     with open(f"{os.path.dirname(__file__)}/input.txt", "r") as f:
         secrets = list(map(int, f.read().split("\n")))
 
-    sequences = []
     for secret in secrets:
-        sequences.append(predict(secret, 2000))
+        predict(secret, 2000)
 
-    possible_sequences = set()
-    for seq in sequences:
-        possible_sequences.update(seq.keys())
-
-    bananas = 0
-    for seq in possible_sequences:
-        total = 0
-        for s in sequences:
-            if seq in s:
-                total += s[seq]
-        if total > bananas:
-            bananas = total
-
-    print(bananas)
+    print(max(totals.values()))
 
 
 if __name__ == "__main__":
