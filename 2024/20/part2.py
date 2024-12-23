@@ -13,6 +13,9 @@ class Maze:
         self.C = len(grid[0])
 
     def neighbors(self, pos, manhattan):
+        """
+        Returns the neighbors of a position within a given Manhattan distance.
+        """
         neighbors = []
         for dr in range(-manhattan, manhattan + 1):
             remaining = manhattan - abs(dr)
@@ -83,9 +86,9 @@ if __name__ == "__main__":
     with cProfile.Profile() as pr:
         print(m.solve(cheat_duration=20, min_savings=100))
 
-    # Save the profile data to a file
-    with open("output.prof", "w") as f:
-        stats = pstats.Stats(pr, stream=f)
-        stats.strip_dirs()
-        stats.sort_stats("cumtime")
-        stats.dump_stats("output.prof")
+        # Save the profile data to a file
+        with open("output.prof", "w") as f:
+            stats = pstats.Stats(pr, stream=f)
+            stats.strip_dirs()
+            stats.sort_stats("cumtime")
+            stats.dump_stats("output.prof")
