@@ -36,8 +36,8 @@ def main(input: str):
     reports: list[list[int]] = [
         [int(level) for level in report.split()] for report in input.split("\n")
     ]
-    print(part1(reports))
-    print(part2(reports))
+    print("Part 1:", part1(reports))
+    print("Part 2:", part2(reports))
 
 
 if __name__ == "__main__":
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     import pstats
     import os
     import time
-    from colorama import Fore
+    from colorama import Fore, Style
 
     with open(f"{os.path.dirname(__file__)}/input.txt", "r") as f:
         input = f.read()
@@ -54,7 +54,11 @@ if __name__ == "__main__":
         start_time = time.time()
         main(input)
         end_time = time.time()
-        print(Fore.CYAN + f"execution time: {end_time - start_time:.3f} seconds")
+        print(
+            Fore.CYAN
+            + f"execution time: {end_time - start_time:.3f} seconds"
+            + Style.RESET_ALL
+        )
 
         # Save the profile data to a file
         with open(f"{os.path.dirname(__file__)}/solution.prof", "w") as f:

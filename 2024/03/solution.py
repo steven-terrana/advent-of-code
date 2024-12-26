@@ -19,8 +19,8 @@ def main(input: str):
             if enabled:
                 part2 += int(i[1]) * int(i[2])
 
-    print(part1)
-    print(part2)
+    print("Part 1:", part1)
+    print("Part 2:", part2)
 
 
 if __name__ == "__main__":
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     import pstats
     import os
     import time
-    from colorama import Fore
+    from colorama import Fore, Style
 
     with open(f"{os.path.dirname(__file__)}/input.txt", "r") as f:
         input = f.read()
@@ -37,7 +37,11 @@ if __name__ == "__main__":
         start_time = time.time()
         main(input)
         end_time = time.time()
-        print(Fore.CYAN + f"execution time: {end_time - start_time:.3f} seconds")
+        print(
+            Fore.CYAN
+            + f"execution time: {end_time - start_time:.3f} seconds"
+            + Style.RESET_ALL
+        )
 
         # Save the profile data to a file
         with open(f"{os.path.dirname(__file__)}/solution.prof", "w") as f:

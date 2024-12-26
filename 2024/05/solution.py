@@ -57,8 +57,8 @@ def part2(rules, updates) -> int:
 
 def main(input: str):
     rules, updates = parse(input)
-    print("part 1:", part1(rules, updates))
-    print("part 2:", part2(rules, updates))
+    print("Part 1:", part1(rules, updates))
+    print("Part 2:", part2(rules, updates))
     pass
 
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     import pstats
     import os
     import time
-    from colorama import Fore
+    from colorama import Fore, Style
 
     with open(f"{os.path.dirname(__file__)}/input.txt", "r") as f:
         input = f.read()
@@ -76,7 +76,11 @@ if __name__ == "__main__":
         start_time = time.time()
         main(input)
         end_time = time.time()
-        print(Fore.CYAN + f"execution time: {end_time - start_time:.3f} seconds")
+        print(
+            Fore.CYAN
+            + f"execution time: {end_time - start_time:.3f} seconds"
+            + Style.RESET_ALL
+        )
 
         # Save the profile data to a file
         with open(f"{os.path.dirname(__file__)}/solution.prof", "w") as f:
