@@ -1,5 +1,4 @@
 import networkx as nx
-from colorama import Fore
 
 
 def parse(input: str):
