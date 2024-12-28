@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import matplotlib.pyplot as plt
-import time
 
 
 @dataclass
@@ -73,28 +72,6 @@ class Computer:
         return Computer(*digits[:3], digits[3:])
 
 
-def ten_to_eight(decimal_number):
-    if decimal_number == 0:
-        return [0]  # Special case for 0
-
-    octal_digits = []
-    while decimal_number > 0:
-        remainder = decimal_number % 8
-        octal_digits.append(remainder)
-        decimal_number //= 8
-
-    # The digits are collected in reverse order, so reverse them
-    return list(reversed(octal_digits))
-
-
-def eight_to_ten(octal_digits):
-    # Reverse the array to handle powers of 8 easily
-    decimal_value = 0
-    for index, digit in enumerate(reversed(octal_digits)):
-        decimal_value += digit * (8**index)
-    return decimal_value
-
-
 c = Computer.parse()
 
 # Step 1: reverse engineer the program manually:
@@ -119,7 +96,7 @@ min_a = 8 ** (len(c.program) - 1)
 # and outputs, i tried looking at patterns when converting
 # the a register to 8 bits
 
-bits = ten_to_eight(min_a)
+bits = [int(n) for n in oct(min_a)[2:]]
 
 # perhaps unsurprisingly, the number of input bits matched the
 # number of output bits, so i started manually testing bit
@@ -140,7 +117,7 @@ while idx < len(c.program):
         bits[idx] = 0
         idx -= 1
         continue
-    a = eight_to_ten(bits)
+    a = int("".join(str(n) for n in bits), 8)
     c.reset(a)
     c.execute()
     output = list(reversed(c.out))

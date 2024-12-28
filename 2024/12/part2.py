@@ -1,6 +1,5 @@
 import os
 import networkx as nx
-import math
 import matplotlib.pyplot as plt
 
 with open(f"{os.path.dirname(__file__)}/input.txt", "r") as file:

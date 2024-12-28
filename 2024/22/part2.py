@@ -37,7 +37,7 @@ def predict(initial: int, n: int) -> list[list[int]]:
                 totals[seq] += new_price
         price = new_price
 
-    return sequences
+    return secret
 
 
 def prune(secret):

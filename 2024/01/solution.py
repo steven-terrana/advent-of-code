@@ -16,8 +16,8 @@ def part2(g1: list[int], g2: list[int]) -> int:
 
 def main(input: str):
     (g1, g2) = zip(*[[int(n) for n in line.split()] for line in input.split("\n")])
-    print(part1(g1, g2))
-    print(part2(g1, g2))
+    print("Part 1:", part1(g1, g2))
+    print("Part 2:", part2(g1, g2))
 
 
 if __name__ == "__main__":

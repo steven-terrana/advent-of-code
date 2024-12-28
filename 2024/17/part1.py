@@ -1,7 +1,3 @@
-from dataclasses import dataclass
-
-
-@dataclass
 class Computer:
     def __init__(self, a, b, c, program):
         self.a = a

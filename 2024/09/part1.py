@@ -21,7 +21,7 @@ while None in filesystem:
 
 checksum = 0
 for block, id in enumerate(filesystem):
-    if id == None:
+    if id is not None:
         break
     checksum += block * id
 

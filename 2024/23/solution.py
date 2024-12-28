@@ -61,8 +61,8 @@ def part2(edges, adjacency) -> str:
 def main(input: str):
     edges, adjacency = parse(input)
 
-    print("part 1:", part1(edges, adjacency))
-    print("part 2:", part2(edges, adjacency))
+    print("Part 1:", part1(edges, adjacency))
+    print("Part 2:", part2(edges, adjacency))
 
 
 if __name__ == "__main__":

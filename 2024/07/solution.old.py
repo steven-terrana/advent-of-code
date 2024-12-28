@@ -1,3 +1,6 @@
+from collections import deque
+
+
 def parse(input):
     equations = []
     for line in input.split("\n"):
@@ -8,41 +11,35 @@ def parse(input):
     return equations
 
 
-def solve(result, numbers, allow_concat, value, index):
-    # found the solution
-    if value == result and index == len(numbers):
-        return True
-
-    # overshot and all operations are increasing
-    # so end early
-    if value > result:
-        return False
-
-    # out of numbers
-    if index >= len(numbers):
-        return False
-
-    # allow concat
-    if allow_concat:
-        if solve(
-            result,
-            numbers,
-            allow_concat,
-            int(str(value) + str(numbers[index])),
-            index + 1,
-        ):
+def solve(result, numbers, allow_concat):
+    queue = deque([(numbers[0], 1)])
+    N = len(numbers)
+    while queue:
+        value, idx = queue.pop()
+        if value == result and idx == N:
             return True
 
-    # addition
-    if solve(result, numbers, allow_concat, value + numbers[index], index + 1):
-        return True
+        if value > result or idx == N:
+            continue
 
-    # multiply
-    if solve(result, numbers, allow_concat, value * numbers[index], index + 1):
-        return True
+        add_val = value + numbers[idx]
+        queue.append((add_val, idx + 1))
 
-    # no options remaining
+        mult_val = value * numbers[idx]
+        queue.append((mult_val, idx + 1))
+
+        if allow_concat:
+            concat_val = concat_numbers(value, numbers[idx])
+            queue.append((concat_val, idx + 1))
+
     return False
+
+
+def concat_numbers(a, b):
+    # Concatenate two integers by computing the digit length of b
+    # e.g., 12 and 345 => 12*1000 + 345 = 12345
+    # This avoids costly str->int conversions
+    return a * 10 ** len(str(b)) + b
 
 
 def main(input):
@@ -50,14 +47,14 @@ def main(input):
     remaining = []
     total = 0
     for result, numbers in equations:
-        if solve(result, numbers, False, numbers[0], 1):
+        if solve(result, numbers, False):
             total += result
         else:
             remaining.append((result, numbers))
     print("Part 1:", total)
 
     for result, numbers in remaining:
-        if solve(result, numbers, True, numbers[0], 1):
+        if solve(result, numbers, True):
             total += result
     print("Part 2:", total)
 

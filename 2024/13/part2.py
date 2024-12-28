@@ -48,7 +48,7 @@ class ClawMachine:
         ay, by = map(int, re.findall(r"Y\+(\d+)", input))
         px, py = map(int, re.findall(r"=(\d+)", input))
         n = 0
-        # n = 10000000000000
+        n = 10000000000000
         return ClawMachine(a=(ax, ay), b=(bx, by), prize=(px + n, py + n))
 
 
@@ -59,5 +59,4 @@ for i, c in enumerate(a.claw_machines):
     cost = c.solve()
     if cost:
         total += cost
-    print(f"{i}/{len(a.claw_machines)} -> {cost}")
 print(total)

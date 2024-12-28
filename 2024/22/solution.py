@@ -1,5 +1,58 @@
+def evolve(secret):
+    result = secret * 64
+    secret = prune(mix(secret, result))
+
+    result = secret // 32
+    secret = prune(mix(secret, result))
+
+    result = secret * 2048
+    secret = prune(mix(secret, result))
+    return secret
+
+
+def predict(totals, initial, n):
+    prices = []
+    diffs = []
+    secret = initial
+    price = secret % 10
+    sequences = set()
+    for i in range(n):
+        secret = evolve(secret)
+        new_price = secret % 10
+        prices.append(new_price)
+        diffs.append(new_price - price)
+        if new_price > 0 and i >= 3:
+            seq = tuple(diffs[i - 3 : i + 1])
+            if seq not in sequences:
+                sequences.add(seq)
+                if seq not in totals:
+                    totals[seq] = 0
+                totals[seq] += new_price
+        price = new_price
+
+    return secret
+
+
+def prune(secret):
+    return secret % 16777216
+
+
+def mix(secret, mixin):
+    return mixin ^ secret
+
+
 def main(input: str):
-    pass
+    secrets = [int(n) for n in input.splitlines()]
+
+    totals = {}
+    part1 = 0
+    for secret in secrets:
+        part1 += predict(totals, secret, 2000)
+
+    part2 = max(totals.values())
+
+    print("Part 1:", part1)
+    print("Part 2:", part2)
 
 
 if __name__ == "__main__":

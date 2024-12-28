@@ -19,11 +19,6 @@ class Vector:
         return Vector(*n)
 
 
-def print_grid(grid):
-    for r in grid:
-        print("".join(map(str, r)))
-
-
 class Grid:
     def __init__(self, width, length):
         self.w = width
