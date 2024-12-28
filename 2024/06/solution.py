@@ -1,45 +1,87 @@
-# cardinal directional vectors sequenced clockwise
-directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+from collections import defaultdict
+from rich.console import Console
+from bisect import bisect_left, bisect_right, insort_left
 
 
 class Guard:
     def __init__(self, r, c):
+        # initial guard row, column
         self.ri = r
-        self.r = r
         self.ci = c
+        self.di = "N"
+        # current guard row, column
+        self.r = r
         self.c = c
-        self.turns = 0
+        # number of turns the guard has made
+        self.d = "N"
+
+        self.cache = {}
 
     def reset(self):
         self.r = self.ri
         self.c = self.ci
-        self.turns = 0
+        self.d = self.di
 
-    def to_state(self):
-        return [directions[self.turns % 4], self.r, self.c]
+    def get_next_position(self, lab):
+        r, c, d = self.r, self.c, self.d
+
+        if d == "N":
+            obstacles = lab.o_by_col[c]
+            idx = bisect_left(obstacles, r)
+            if idx == 0:
+                result = ((0, c, "N"), True)
+            else:
+                row = obstacles[idx - 1] + 1
+                result = ((row, c, "E"), False)
+        if d == "E":
+            obstacles = lab.o_by_row[r]
+            idx = bisect_right(obstacles, c)
+            if idx == len(obstacles):
+                result = ((r, lab.C - 1, "E"), True)
+            else:
+                col = obstacles[idx] - 1
+                result = ((r, col, "S"), False)
+        if d == "S":
+            obstacles = lab.o_by_col[c]
+            idx = bisect_right(obstacles, r)
+            if idx == len(obstacles):
+                result = ((lab.R - 1, c, "S"), True)
+            else:
+                row = obstacles[idx] - 1
+                result = ((row, c, "W"), False)
+        if d == "W":
+            obstacles = lab.o_by_row[r]
+            idx = bisect_left(obstacles, c)
+            if idx == 0:
+                result = ((r, 0, "W"), True)
+            else:
+                col = obstacles[idx - 1] + 1
+                result = ((r, col, "N"), False)
+
+        return result
 
     def stroll(self, lab):
-        # state tuple now includes direction in addition to position
-        visited = set([(directions[0], self.r, self.c)])
+        """
+        guard strolls until exiting the lab or
+        realizing we're stuck in a loop. returns
+        the path and a boolean (true = exited, false = loop)
+        """
+        path = [(self.r, self.c, self.d)]
+        visited = set()
         while True:
-            next_r = self.r + directions[self.turns % 4][0]
-            next_c = self.c + directions[self.turns % 4][1]
-            if not (0 <= next_r < lab.R and 0 <= next_c < lab.C):
-                # exited without revisiting a state
-                return (False, visited)
-
-            if (next_r, next_c) in lab.obstacles:
-                self.turns += 1
-            else:
-                self.r = next_r
-                self.c = next_c
-
-            state = (directions[self.turns % 4], self.r, self.c)
-            if state in visited:
-                # revisited a state
-                return (True, visited)
-            else:
-                visited.add(state)
+            pos, exited = self.get_next_position(lab)
+            # add the new position to the path
+            path.append(pos)
+            # we're in a loop
+            if pos in visited:
+                return (path, False)
+            # we exited the lab
+            if exited:
+                return (path, True)
+            # update where we've been
+            visited.add(pos)
+            # update our position
+            self.r, self.c, self.d = pos
 
 
 class Lab:
@@ -47,18 +89,59 @@ class Lab:
         self.R = R
         self.C = C
         self.obstacles = obstacles
+        self.o_by_row = defaultdict(list)
+        self.o_by_col = defaultdict(list)
+        for r, c in obstacles:
+            self.o_by_row[r].append(c)
+            self.o_by_col[c].append(r)
+        for row in self.o_by_row:
+            self.o_by_row[row].sort()
+        for col in self.o_by_col:
+            self.o_by_col[col].sort()
 
-    def print(self, path):
+    def add_obstacle(self, r, c):
+        self.obstacles.add((r, c))
+        insort_left(self.o_by_row[r], c)
+        insort_left(self.o_by_col[c], r)
+
+    def remove_obstacle(self, r, c):
+        self.obstacles.remove((r, c))
+        self.o_by_row[r].remove(c)
+        self.o_by_col[c].remove(r)
+
+    def print(self, guard, path, highlight=None):
+        console = Console()
         for r in range(self.R):
-            row = []
+            row = ""
             for c in range(self.C):
-                if (r, c) in path:
-                    row.append("X")
+                if (r, c) == highlight:
+                    row += "[bold magenta]O[/bold magenta]"
+                elif (r, c) == (guard.ri, guard.ci):
+                    row += "[bold blue]^[/bold blue]"
                 elif (r, c) in self.obstacles:
-                    row.append("#")
+                    row += "[bold red]#[/bold red]"
+                elif (r, c) in path:
+                    row += "[bold green]*[/bold green]"
                 else:
-                    row.append(".")
-            print("".join(row))
+                    row += "[dim].[/dim]"
+            console.print(row)
+
+
+def expand(path):
+    r, c, d = path[0]
+    steps = [(r, c, d)]
+    for p in path[1:]:
+        nr, nc, nd = p
+        if d == "N":
+            steps.extend((i, c, "N") for i in range(r, nr - 1, -1))
+        if d == "E":
+            steps.extend((r, i, "E") for i in range(c, nc + 1))
+        if d == "S":
+            steps.extend((i, c, "S") for i in range(r, nr + 1))
+        if d == "W":
+            steps.extend((r, i, "W") for i in range(c, nc - 1, -1))
+        r, c, d = nr, nc, nd
+    return steps
 
 
 def parse(input: str):
@@ -78,22 +161,27 @@ def parse(input: str):
 
 def main(input: str):
     lab, guard = parse(input)
-    _, path = guard.stroll(lab)
-    guard.reset()
-    print("Part 1:", len(path))
+    # get all the turning points
+    path, exited = guard.stroll(lab)
+    steps = expand(path)
+    print("Part 1:", len(set([(s[0], s[1]) for s in steps])))
+    # lab.print(guard, steps)
 
-    # exclude initial position and disregard direction
-    potential = set([(p[1], p[2]) for p in list(path)[1:]])
+    part2 = 0
+    visited = set()  # avoid testing same spot twice
+    for i, step in enumerate(steps[1:]):
+        r, c, d = step
+        if (r, c) in visited:
+            continue
+        lab.add_obstacle(r, c)
+        guard.r, guard.c, guard.d = steps[i - 1]
+        _, exited = guard.stroll(lab)
+        if not exited:
+            part2 += 1
+        lab.remove_obstacle(r, c)
+        visited.add((r, c))
 
-    count = 0
-    for point in potential:
-        lab.obstacles.add(point)
-        if guard.stroll(lab)[0]:
-            count += 1
-        lab.obstacles.remove(point)
-        guard.reset()
-
-    print("Part 2:", count)
+    print("Part 2:", part2)
 
 
 if __name__ == "__main__":
@@ -102,23 +190,42 @@ if __name__ == "__main__":
     import os
     import time
     from colorama import Fore, Style
+    import argparse
+
+    # Create the parser
+    parser = argparse.ArgumentParser()
+
+    # Add a flag (boolean argument)
+    parser.add_argument(
+        "--profile",
+        action="store_true",  # Makes the flag act as a boolean
+        help="Enable cProfile",
+    )
+
+    args = parser.parse_args()
 
     with open(f"{os.path.dirname(__file__)}/input.txt", "r") as f:
         input = f.read()
 
-    with cProfile.Profile() as pr:
+    if args.profile:
+        with cProfile.Profile() as pr:
+            start_time = time.time()
+            main(input)
+            end_time = time.time()
+
+            # Save the profile data to a file
+            with open(f"{os.path.dirname(__file__)}/solution.prof", "w") as f:
+                stats = pstats.Stats(pr, stream=f)
+                stats.strip_dirs()
+                stats.sort_stats("cumtime")
+                stats.dump_stats(f"{os.path.dirname(__file__)}/solution.prof")
+    else:
         start_time = time.time()
         main(input)
         end_time = time.time()
-        print(
-            Fore.CYAN
-            + f"execution time: {end_time - start_time:.3f} seconds"
-            + Style.RESET_ALL
-        )
 
-        # Save the profile data to a file
-        with open(f"{os.path.dirname(__file__)}/solution.prof", "w") as f:
-            stats = pstats.Stats(pr, stream=f)
-            stats.strip_dirs()
-            stats.sort_stats("cumtime")
-            stats.dump_stats(f"{os.path.dirname(__file__)}/solution.prof")
+    print(
+        Fore.CYAN
+        + f"execution time: {end_time - start_time:.3f} seconds"
+        + Style.RESET_ALL
+    )
