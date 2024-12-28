@@ -1,3 +1,6 @@
 .venv
 node_modules
 input.txt
+output.prof
+__pycache__
+solution.prof

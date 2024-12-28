@@ -83,10 +83,11 @@ if __name__ == "__main__":
     with open(f"{os.path.dirname(__file__)}/input.txt", "r") as f:
         input = f.read()
 
-    with cProfile.Profile() as pr:
-        start_time = time.time()
-        main(input)
-        end_time = time.time()
+        with cProfile.Profile() as pr:
+            start_time = time.time()
+            main(input)
+            end_time = time.time()
+
         print(
             Fore.CYAN
             + f"execution time: {end_time - start_time:.3f} seconds"
