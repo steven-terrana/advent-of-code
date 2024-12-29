@@ -1,7 +1,7 @@
 import os
 import re
 from dataclasses import dataclass
-import sympy
+import numpy as np
 
 
 @dataclass
@@ -22,11 +22,6 @@ class Arcade:
         return Arcade(claw_machines=claw_machines)
 
 
-def is_integer(value, tolerance=1e-9):
-    """determines if a given float is.. basically.. an integer"""
-    return abs(value - round(value)) < tolerance
-
-
 class ClawMachine:
     def __init__(self, a, b, prize):
         self.a = a
@@ -37,14 +32,25 @@ class ClawMachine:
         self.prize = (self.prize[0] + n, self.prize[1] + n)
 
     def solve(self):
-        n_a, n_b = sympy.symbols("n_a n_b", integer=True)
-        eq_x = sympy.Eq(n_a * self.a[0] + n_b * self.b[0], self.prize[0])
-        eq_y = sympy.Eq(n_a * self.a[1] + n_b * self.b[1], self.prize[1])
-        solution = sympy.solve((eq_x, eq_y), (n_a, n_b), domain=sympy.S.Integers)
-        if solution:
-            return solution[n_a] * Arcade.A_COST + solution[n_b] * Arcade.B_COST
-        else:
-            return None
+        # Coefficients
+        A = np.array([[self.a[0], self.b[0]], [self.a[1], self.b[1]]])
+        B = np.array(self.prize)
+
+        # Solve using numpy's linear algebra solver
+        try:
+            solution = np.linalg.solve(A, B)  # Floating point solutions
+            n_a, n_b = solution
+
+            # Check if the solution is integers
+            tol = 0.0001
+            if abs(n_a - round(n_a)) < tol and abs(n_b - round(n_b)) < tol:
+                n_a = round(n_a)
+                n_b = round(n_b)
+                return n_a * Arcade.A_COST + n_b * Arcade.B_COST
+            else:
+                return None  # No integer solution
+        except np.linalg.LinAlgError:
+            return None  # System is singular or not solvable
 
     @staticmethod
     def parse(input):
