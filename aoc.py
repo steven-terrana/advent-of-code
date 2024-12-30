@@ -83,7 +83,6 @@ def run_solution(solution_path: Path) -> float:
 @click.argument(
     "directory", type=click.Path(exists=True, file_okay=False, dir_okay=True)
 )
-@click.option("--show-output", is_flag=True, help="Show output from solutions")
 @click.option(
     "-n",
     type=int,
@@ -91,7 +90,7 @@ def run_solution(solution_path: Path) -> float:
     show_default=True,
     help="Number of runs per solution file.",
 )
-def run(directory, show_output, n):
+def run(directory, n):
     """Run all Advent of Code solutions found in the directory and its subdirectories."""
     directory_path = Path(directory)
     solution_files = list(find_solution_files(directory_path))
@@ -104,8 +103,8 @@ def run(directory, show_output, n):
     total_max_time = 0
     total_runs = len(solution_files) * n
     console = Console()
-    table = Table(title=f"Advent of Code - {directory} (n={n})")
-    for c in ["Day", "Mean Time", "Min Time", "Max Time", "Std Dev"]:
+    table = Table(title=f"[bold cyan]Advent of Code - {directory} (n={n})[/bold cyan]")
+    for c in ["Day", "Min", "Mean", "Max"]:
         table.add_column(c, justify="center")
 
     progress = Progress(
@@ -137,31 +136,27 @@ def run(directory, show_output, n):
             mean_time = statistics.mean(results)
             min_time = min(results)
             max_time = max(results)
-            stdev_time = statistics.stdev(results) if len(results) > 1 else 0.0
 
             total_mean_time += mean_time
             total_min_time += min_time
             total_max_time += max_time
-            color = "green" if mean_time < (1 / 25) else "red"
-            symbol = ":heavy_check_mark:" if mean_time < (1 / 25) else "x"
             table.add_row(
                 f"[bold white]{solution_file.parent.name}[/bold white]",
-                f"[{color}]{symbol} {mean_time:.5f}s[/{color}]",
-                f"{min_time:.5f}",
-                f"{max_time:.5f}",
-                f"{stdev_time:.5f}",
+                f"{min_time:.3f}s",
+                f"{mean_time:.3f}s",
+                f"{max_time:.3f}s",
             )
             progress.update(task, advance=1, refresh=True)
 
     console.print(table)
-    summary = Table(title="Summary Data")
-    summary.add_column("Total Min Times")
-    summary.add_column("Total Mean Times")
-    summary.add_column("Total Max Times")
+    summary = Table(title="[bold cyan]Cumulative Times[/bold cyan]")
+    summary.add_column("Min Times")
+    summary.add_column("Mean Times")
+    summary.add_column("Max Times")
     summary.add_row(
-        f"{total_min_time:.5f}",
-        f"{total_mean_time:.5f}",
-        f"{total_max_time:.5f}",
+        f"{total_min_time:.3f}s",
+        f"{total_mean_time:.3f}s",
+        f"{total_max_time:.3f}s",
     )
     console.print(summary)
 
