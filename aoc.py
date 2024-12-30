@@ -1,16 +1,22 @@
 import click
-import os
 import time
 import importlib.util
 from pathlib import Path
 from typing import Iterator
 import sys
-from contextlib import redirect_stdout, contextmanager
+from contextlib import contextmanager
 from io import StringIO
-from colorama import Fore, Style
 from rich.console import Console
-from rich.panel import Panel
-from rich.columns import Columns
+import statistics
+from rich.console import Console
+from rich.table import Table
+from rich.progress import (
+    Progress,
+    BarColumn,
+    TimeElapsedColumn,
+    TimeRemainingColumn,
+    TextColumn,
+)
 
 
 @contextmanager
@@ -62,13 +68,11 @@ def run_solution(solution_path: Path) -> float:
         input_content = get_input_content(solution_path)
 
         # Time the solution while capturing stdout
-        start_time = time.perf_counter()
         with suppress_stdout():
+            start_time = time.perf_counter()
             solution.main(input_content)
-        end_time = time.perf_counter()
-
-        execution_time = end_time - start_time
-        return execution_time
+            end_time = time.perf_counter()
+            return end_time - start_time
 
     except Exception as e:
         click.echo(f"✗ {solution_path.parent.name}: {str(e)}")
@@ -80,7 +84,14 @@ def run_solution(solution_path: Path) -> float:
     "directory", type=click.Path(exists=True, file_okay=False, dir_okay=True)
 )
 @click.option("--show-output", is_flag=True, help="Show output from solutions")
-def run(directory, show_output):
+@click.option(
+    "-n",
+    type=int,
+    default=10,
+    show_default=True,
+    help="Number of runs per solution file.",
+)
+def run(directory, show_output, n):
     """Run all Advent of Code solutions found in the directory and its subdirectories."""
     directory_path = Path(directory)
     solution_files = list(find_solution_files(directory_path))
@@ -88,26 +99,71 @@ def run(directory, show_output):
     if not solution_files:
         raise click.ClickException(f"No solution.py files found in {directory}")
 
-    total_time = 0
+    total_mean_time = 0
+    total_min_time = 0
+    total_max_time = 0
+    total_runs = len(solution_files) * n
     console = Console()
+    table = Table(title=f"Advent of Code - {directory} (n={n})")
+    for c in ["Day", "Mean Time", "Min Time", "Max Time", "Std Dev"]:
+        table.add_column(c, justify="center")
 
-    console.print(Columns(["Day", "Execution Time"]))
+    progress = Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        "[progress.percentage]{task.percentage:>3.0f}%",
+        "•",
+        TimeElapsedColumn(),
+        "•",
+        TimeRemainingColumn(),
+        transient=True,
+    )
 
-    for solution_file in sorted(solution_files):
-        execution_time = run_solution(solution_file)
-        total_time += execution_time
-        color = "green" if execution_time < (1 / 25) else "red"
-        symbol = ":heavy_check_mark:" if execution_time < (1 / 25) else "x"
-        c = Columns(
-            [
+    with progress:
+        task = progress.add_task("Processing solutions...", total=total_runs)
+        for solution_file in sorted(solution_files):
+            progress.update(
+                task,
+                description=f"Processing {solution_file.parent.name}...",
+                refresh=True,
+            )
+
+            results = []
+            for _ in range(n):  # Run the solution 'n' times
+                run_time = run_solution(solution_file)
+                results.append(run_time)
+                progress.advance(task, advance=1)
+
+            mean_time = statistics.mean(results)
+            min_time = min(results)
+            max_time = max(results)
+            stdev_time = statistics.stdev(results) if len(results) > 1 else 0.0
+
+            total_mean_time += mean_time
+            total_min_time += min_time
+            total_max_time += max_time
+            color = "green" if mean_time < (1 / 25) else "red"
+            symbol = ":heavy_check_mark:" if mean_time < (1 / 25) else "x"
+            table.add_row(
                 f"[bold white]{solution_file.parent.name}[/bold white]",
-                f"[{color}] {symbol} {execution_time:.5f}s[/{color}]",
-            ]
-        )
-        # console.print(f"[bold]{solution_file.parent.name}", f"{execution_time:.5f}s")
-        console.print(c)
+                f"[{color}]{symbol} {mean_time:.5f}s[/{color}]",
+                f"{min_time:.5f}",
+                f"{max_time:.5f}",
+                f"{stdev_time:.5f}",
+            )
+            progress.update(task, advance=1, refresh=True)
 
-    console.print(Panel(f"Total execution time: {total_time:.4f}s"))
+    console.print(table)
+    summary = Table(title="Summary Data")
+    summary.add_column("Total Min Times")
+    summary.add_column("Total Mean Times")
+    summary.add_column("Total Max Times")
+    summary.add_row(
+        f"{total_min_time:.5f}",
+        f"{total_mean_time:.5f}",
+        f"{total_max_time:.5f}",
+    )
+    console.print(summary)
 
 
 if __name__ == "__main__":
