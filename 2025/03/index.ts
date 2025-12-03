@@ -1,11 +1,9 @@
-import { findAncestor } from "typescript"
-
 const input = await Bun.file('input.txt').text()
 
 type Battery = number[]
 const batteries: Battery[] = input.split('\n').map( line => line.split('').map(i => parseInt(i)))
 
-function max(battery: Battery, cells: number = 2){
+function max(battery: Battery, cells: number = 2): number {
     let result = []
     let start = 0
     for (let i = cells - 1; i >= 0; i--){
