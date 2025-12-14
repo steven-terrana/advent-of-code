@@ -1,0 +1,15 @@
+{
+  "name": "10",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "yalps": "^0.6.3"
+  }
+}
